@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chape</title>
+  <meta name="description" content="Calculez le volume, la charge et les matériaux nécessaires pour une chape. Résultats précis pour sable, ciment, eau et sacs selon vos dimensions.">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+
+    :root {
+      --anthracite: #2b2f33;
+      --text: #333;
+      --border: #ddd;
+      --radius: 8px;
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: transparent; /* ✅ transparence globale */
+      color: var(--text);
+    }
+
+    header {
+      text-align: center;
+      background: transparent;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: var(--anthracite); /* ✅ gris anthracite */
+      font-weight: 700;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      padding: 20px;
+      background: transparent; /* ✅ transparent */
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin: 10px 0 5px;
+      font-weight: 600;
+      color: var(--anthracite);
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 25%; /* ✅ réduit (1/4 de la largeur) */
+      padding: 6px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 13px;
+      text-align: right;
+      background: #fff; /* ✅ fond visible */
+      outline: none;
+      transition: 0.15s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #cbd5e1;
+      box-shadow: 0 0 0 2px rgba(37,99,235,.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background: transparent; /* ✅ pas de fond */
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px;
+      text-align: center;
+      background: transparent; /* ✅ cellules transparentes */
+      font-size: 13px;
+    }
+
+    th {
+      color: var(--anthracite);
+      font-weight: 700;
+    }
+
+    .separator {
+      background: transparent;
+      color: var(--anthracite);
+      font-weight: bold;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      input, select { width: 60%; font-size: 12px; padding: 5px; }
+      .container { max-width: 90%; padding: 15px; }
+      h1 { font-size: 1.4rem; }
+      label { font-size: 13px; }
+    }
+
+    @media (max-width: 480px) {
+      table { display: block; margin-bottom: 20px; }
+      table thead { display: none; }
+      table tr { display: block; margin-bottom: 10px; }
+      table td {
+        display: block;
+        border: none;
+        border-bottom: 1px solid var(--border);
+        text-align: left;
+        padding: 6px 0;
+      }
+      table td:last-child { border-bottom: none; }
+      table td:before {
+        content: attr(data-label);
+        font-weight: 700;
+        color: var(--anthracite);
+        display: block;
+      }
+      input, select { width: 80%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Chape</h1>
+  </header>
+
+  <div class="container">
+    <label for="length">Longueur (m) :</label>
+    <input type="number" id="length" step="0.01" oninput="calculateChape()">
+
+    <label for="width">Largeur (m) :</label>
+    <input type="number" id="width" step="0.01" oninput="calculateChape()">
+
+    <label for="thickness">Épaisseur (cm) :</label>
+    <input type="number" id="thickness" step="0.1" oninput="calculateChape()">
+
+    <label for="charge">Charge admissible (kg/m²) :</label>
+    <input type="number" id="charge" step="1" oninput="calculateChape()">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Matériaux</th>
+          <th>Quantité</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Sable sec</td>
+          <td class="result" id="sable">-</td>
+        </tr>
+        <tr>
+          <td>Ciment</td>
+          <td class="result" id="cement">-</td>
+        </tr>
+        <tr>
+          <td>Eau (total)</td>
+          <td class="result" id="waterTotal">-</td>
+        </tr>
+
+        <tr><td colspan="2" class="separator">OU</td></tr>
+
+        <tr>
+          <td>Nombre de sacs</td>
+          <td class="result" id="nbSacs">-</td>
+        </tr>
+        <tr>
+          <td>Eau par sac</td>
+          <td class="result" id="eauParSac">-</td>
+        </tr>
+        <tr>
+          <td>Eau totale pour sacs</td>
+          <td class="result" id="eauTotalSacs">-</td>
+        </tr>
+
+        <tr><td colspan="2" class="separator">Volume & Charge</td></tr>
+
+        <tr>
+          <td>Volume total</td>
+          <td class="result" id="volume">-</td>
+        </tr>
+        <tr>
+          <td>Charge de la chape</td>
+          <td class="result" id="chargeResult">-</td>
+        </tr>
+        <tr>
+          <td>Charge admissible respectée ?</td>
+          <td class="result" id="chargeValidation">-</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function calculateChape() {
+      const length = parseFloat(document.getElementById('length').value) || 0;
+      const width = parseFloat(document.getElementById('width').value) || 0;
+      const thicknessCm = parseFloat(document.getElementById('thickness').value) || 0;
+      const chargeAdmissible = parseFloat(document.getElementById('charge').value) || 0;
+
+      const thickness = thicknessCm / 100;
+      const volume = (length * width * thickness).toFixed(2);
+      document.getElementById('volume').textContent = volume > 0 ? volume + " m³" : "-";
+
+      const sable = volume > 0 ? (volume * 1).toFixed(2) + " m³" : "-";
+      const ciment = volume > 0 ? (volume * 150).toFixed(0) + " kg" : "-";
+      const eauTotal = volume > 0 ? (volume * 75).toFixed(0) + " L" : "-";
+      document.getElementById('sable').textContent = sable;
+      document.getElementById('cement').textContent = ciment;
+      document.getElementById('waterTotal').textContent = eauTotal;
+
+      const nbSacs = volume > 0 ? Math.ceil((volume * 2000) / 25) : "-";
+      document.getElementById('nbSacs').textContent = nbSacs;
+
+      const eauParSac = 3;
+      document.getElementById('eauParSac').textContent = eauParSac + " L";
+
+      const eauTotalSacs = nbSacs !== "-" ? (nbSacs * eauParSac) + " L" : "-";
+      document.getElementById('eauTotalSacs').textContent = eauTotalSacs;
+
+      const chargeChape = volume > 0 ? (thickness * 2000).toFixed(0) + " kg/m²" : "-";
+      document.getElementById('chargeResult').textContent = chargeChape;
+
+      const validationMessage =
+        chargeAdmissible > 0
+          ? ((thickness * 2000) <= chargeAdmissible ? "OK ✅" : "Trop élevée ❌")
+          : "Définir le type de plancher ⚠";
+      document.getElementById('chargeValidation').textContent = validationMessage;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Poids Linteaux & Prélinteaux</title>
+  <style>
+    :root{
+      --anth:#2b2f33;   /* gris anthracite pour titres/en-têtes */
+      --muted:#6b7280;  /* gris secondaire */
+      --line:#e5e7eb;   /* bordures légères */
+    }
+
+    /* Fond transparent + typo sobre */
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: transparent;
+      color:#333;
+      margin:0;
+      padding:0;
+    }
+
+    /* Titre principal anthracite, sans fond */
+    h1{
+      text-align:center;
+      color:var(--anth);
+      margin:14px 0;
+      font-size:18px;
+      font-weight:600;
+    }
+
+    .table-container{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      margin:6px auto 14px;
+      background: transparent; /* pas de fond */
+      width:100%;
+      max-width:720px;
+      padding:0 10px;
+    }
+
+    table{
+      border-collapse:collapse;
+      width:100%;
+      background: transparent;        /* ✅ transparent */
+      border:1px solid var(--line);
+      font-size:14px;
+      color:#333;
+    }
+
+    th, td{
+      text-align:center;
+      padding:10px;
+      border:1px solid var(--line);
+    }
+
+    /* En-têtes transparents + texte anthracite */
+    thead th{
+      background: transparent;         /* ✅ pas de fond */
+      color:var(--anth);               /* ✅ texte anthracite */
+      font-weight:600;
+    }
+
+    /* Champs centrés, fond blanc pour lisibilité */
+    select, input{
+      padding:6px 8px;
+      border:1px solid var(--line);
+      border-radius:6px;
+      font-size:14px;
+      text-align:center;
+      background:#fff;                 /* ✅ champ non transparent */
+      color:#333;
+      width:100%;
+      max-width:160px;
+    }
+
+    td span{ white-space:nowrap; }
+
+    /* Mobile */
+    @media (max-width:480px){
+      table{ font-size:12px; border:none; }
+      thead{ display:none; }
+      tbody, tr, td{ display:block; width:100%; background:transparent; }
+      tr{
+        margin-bottom:12px;
+        border-bottom:1px solid var(--line);
+        padding:6px 4px;
+      }
+      td{
+        text-align:left;
+        padding:6px 0;
+        border:none;
+      }
+      td::before{
+        content:attr(data-label);
+        display:block;
+        font-weight:600;
+        color:var(--anth);             /* labels anthracite en mobile */
+        margin-bottom:4px;
+      }
+      select, input{
+        max-width:100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Poids Linteaux & Prélinteaux</h1>
+
+  <div class="table-container">
+    <!-- Linteaux creux -->
+    <table>
+      <thead>
+        <tr><th colspan="5">Linteaux Creux</th></tr>
+        <tr>
+          <th>Taille</th>
+          <th>Longueur (cm)</th>
+          <th>Quantité</th>
+          <th>Poids</th>
+          <th>Résultat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Taille">
+            <select id="linteaux-select" onchange="calculateLinteaux()">
+              <option value="25.83">9×14</option>
+              <option value="37.00">9×19</option>
+              <option value="38.33">14×14</option>
+              <option value="42.00">14×19</option>
+              <option value="61.00">19×19</option>
+            </select>
+          </td>
+          <td data-label="Longueur">
+            <input type="number" id="linteaux-length" value="100" min="1" step="1" oninput="calculateLinteaux()">
+          </td>
+          <td data-label="Quantité">
+            <input type="number" id="linteaux-quantity" value="" min="1" step="1" oninput="calculateLinteaux()">
+          </td>
+          <td data-label="Poids"><span id="linteaux-weight">25,83 kg</span></td>
+          <td data-label="Résultat"><span id="linteaux-result">129,15 kg</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Prélinteaux -->
+    <table>
+      <thead>
+        <tr><th colspan="5">Prélinteaux</th></tr>
+        <tr>
+          <th>Taille</th>
+          <th>Longueur (cm)</th>
+          <th>Quantité</th>
+          <th>Poids</th>
+          <th>Résultat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Taille">
+            <select id="prelinteaux-select" onchange="calculatePrelinteaux()">
+              <option value="12.80">9</option>
+              <option value="20.00">14</option>
+              <option value="26.40">19</option>
+            </select>
+          </td>
+          <td data-label="Longueur">
+            <input type="number" id="prelinteaux-length" value="100" min="1" step="1" oninput="calculatePrelinteaux()">
+          </td>
+          <td data-label="Quantité">
+            <input type="number" id="prelinteaux-quantity" value="" min="1" step="1" oninput="calculatePrelinteaux()">
+          </td>
+          <td data-label="Poids"><span id="prelinteaux-weight">12,80 kg</span></td>
+          <td data-label="Résultat"><span id="prelinteaux-result">12,80 kg</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function calculateLinteaux() {
+      const select = document.getElementById("linteaux-select");
+      const weightSpan = document.getElementById("linteaux-weight");
+      const resultSpan = document.getElementById("linteaux-result");
+      const quantityInput = document.getElementById("linteaux-quantity");
+      const lengthInput = document.getElementById("linteaux-length");
+
+      const weightPerMeter = parseFloat(select.value);     // kg/m
+      const length = (parseFloat(lengthInput.value) || 0) / 100; // m
+      const quantity = parseFloat(quantityInput.value) || 0;
+
+      const weight = weightPerMeter * length;
+      weightSpan.textContent = `${weight.toFixed(2)} kg`;
+      resultSpan.textContent = `${(weight * quantity).toFixed(2)} kg`;
+    }
+
+    function calculatePrelinteaux() {
+      const select = document.getElementById("prelinteaux-select");
+      const weightSpan = document.getElementById("prelinteaux-weight");
+      const resultSpan = document.getElementById("prelinteaux-result");
+      const quantityInput = document.getElementById("prelinteaux-quantity");
+      const lengthInput = document.getElementById("prelinteaux-length");
+
+      const weightPerMeter = parseFloat(select.value);     // kg/m
+      const length = (parseFloat(lengthInput.value) || 0) / 100; // m
+      const quantity = parseFloat(quantityInput.value) || 0;
+
+      const weight = weightPerMeter * length;
+      weightSpan.textContent = `${weight.toFixed(2)} kg`;
+      resultSpan.textContent = `${(weight * quantity).toFixed(2)} kg`;
+    }
+
+    // Init
+    window.onload = function(){
+      calculateLinteaux();
+      calculatePrelinteaux();
+    };
+  </script>
+</body>
+</html>

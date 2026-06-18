@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charge admissible Prélinteaux</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    label,
+    select,
+    input {
+      margin-bottom: 10px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Charge admissible pré-linteaux</h2>
+
+  <label for="longueur">Longueur entre appuis (m) :</label>
+  <input type="number" id="longueur" step="0.01" min="0.4" max="4" placeholder="Ex: 1.20">
+
+  <label for="largeur">Largeur du pré-linteau :</label>
+  <select id="largeur">
+    <option value="0.090">9 cm</option>
+    <option value="0.140">14 cm</option>
+    <option value="0.190">19 cm</option>
+  </select>
+
+  <label for="rangs">Nombre de rangs de blocs au-dessus :</label>
+  <select id="rangs">
+    <option value="0">0 rang</option>
+    <option value="1">1 rang</option>
+    <option value="2">2 rangs</option>
+    <option value="3">3 rangs</option>
+    <option value="4">4 rangs</option>
+  </select>
+
+  <h3>Résultat :</h3>
+  <p id="charge_admissible"></p>
+
+  <script>
+    const abaque = {
+      "0.090": {
+        "q0": [11.40, 5.41, 3.09, 1.96, 1.34, 0.96, 0.71, 0.51, 0.37, 0.28, 0.22, null, null, null, null, null, null, null, null],
+        "q1": [null, 11.91, 3.98, 2.35, 1.65, 1.25, 1.00, 0.83, 0.70, 0.61, 0.53, 0.47, 0.42, 0.37, 0.34, 0.30, 0.28, 0.25, 0.22],
+        "q2": [null, null, null, 25.71, 8.64, 4.89, 3.38, 2.57, 2.07, 1.72, 1.47, 1.28, 1.13, 1.01, 0.91, 0.82, 0.75, 0.69, 0.65],
+        "q3": [null, null, null, null, null, 20.00, 14.78, 7.85, 5.32, 4.01, 3.21, 2.67, 2.28, 1.98, 1.75, 1.57, 1.42, 1.29, 1.17],
+        "q4": [null, null, null, null, null, null, null, 16.36, 10.39, 11.38, 7.50, 5.58, 4.43, 3.67, 3.12, 2.72, 2.40, 2.15, 1.95]
+      }
+    };
+
+    const longueurs = [0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 3.8, 4];
+
+    function interpolation(longueur, valeurs) {
+      if (!valeurs) return null;
+      for (let i = 0; i < longueurs.length; i++) {
+        if (longueur === longueurs[i]) {
+          return valeurs[i] !== null ? valeurs[i] : null;
+        }
+      }
+      for (let i = 0; i < longueurs.length - 1; i++) {
+        if (longueur > longueurs[i] && longueur < longueurs[i + 1]) {
+          let y1 = valeurs[i], y2 = valeurs[i + 1];
+          if (y1 === null || y2 === null) return null;
+          return y1 + ((longueur - longueurs[i]) / (longueurs[i + 1] - longueurs[i])) * (y2 - y1);
+        }
+      }
+      return null;
+    }
+
+    function trouverPlageHomologuée(valeurs, longueur) {
+      let min = null, max = null;
+      for (let i = 0; i < valeurs.length; i++) {
+        if (valeurs[i] !== null) {
+          if (min === null) min = longueurs[i];
+          max = longueurs[i];
+        }
+      }
+      if (min === null || max === null) {
+        return "Aucun abaque disponible pour ce nombre de rangs.";
+      }
+      if (longueur < min) {
+        return `Longueur minimale homologuée : ${min} m`;
+      }
+      if (longueur > max) {
+        return `Longueur maximale homologuée : ${max} m`;
+      }
+      return "Longueur non homologuée dans l'intervalle.";
+    }
+
+    function calculerLinteau() {
+      let longueur = parseFloat(document.getElementById('longueur').value) || 0;
+      let largeur = parseFloat(document.getElementById('largeur').value) || 0.09;
+      let rangs = parseInt(document.getElementById('rangs').value) || 0;
+
+      if (longueur < 0.4 || longueur > 4) {
+        document.getElementById('charge_admissible').innerText = "❌ Longueur hors abaque (0.4 à 4 m)";
+        return;
+      }
+
+      let valeurs = abaque["0.090"]["q" + rangs];
+      let base_admissible = interpolation(longueur, valeurs);
+
+      if (base_admissible === null) {
+        let msg = trouverPlageHomologuée(valeurs, longueur);
+        document.getElementById('charge_admissible').innerText = `❌ Aucune donnée pour cette longueur. ${msg}`;
+        return;
+      }
+
+      let charge_admissible = base_admissible * (largeur / 0.09);
+      document.getElementById('charge_admissible').innerText = `Charge admissible : ${charge_admissible.toFixed(2)} kN/m`;
+    }
+
+    window.onload = function () {
+      document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', calculerLinteau);
+        el.addEventListener('change', calculerLinteau);
+      });
+    };
+  </script>
+</body>
+
+</html>

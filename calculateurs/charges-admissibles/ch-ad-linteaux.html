@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Charge admissible Linteaux</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+      flex-direction: column;
+    }
+
+    label, select, input {
+      margin-bottom: 10px;
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <h2>Charge admissible Linteaux</h2>
+
+  <label for="longueur">Longueur totale du linteau (m) :</label>
+  <input type="number" id="longueur" step="0.1" min="1" max="4" placeholder="Ex: 2.4">
+
+  <label for="type_linteau">Type de linteau :</label>
+  <select id="type_linteau">
+    <option value="140x190">Linteau 140x190 mm</option>
+    <option value="190x190">Linteau 190x190 mm</option>
+  </select>
+
+  <label for="hauteur">Hauteur du mur au-dessus (m) :</label>
+  <input type="number" id="hauteur" step="0.01">
+
+  <label for="bloc">Type de bloc :</label>
+  <select id="bloc">
+    <option value="18.34">Béton creux (18.34 kN/m³)</option>
+    <option value="10.30">Argex (10.30 kN/m³)</option>
+    <option value="14.00">Brique (14.00 kN/m³)</option>
+  </select>
+
+  <h3>Résultat :</h3>
+  <p id="charge_admissible"></p>
+  <p id="charge_appliquee"></p>
+  <p id="verification"></p>
+
+  <script>
+    const abaque_linteaux = {
+      "140x190": [74.2, 55.1, 43.7, 36.1, 30.6, 26.5, 26.1, 23.2, 19.1, 19.7, 16.7, 14.3, 12.4, 10.8, 9.5, 8.4],
+      "190x190": [78.9, 58.7, 46.6, 38.5, 32.7, 28.3, 28.1, 24.0, 19.7, 20.7, 17.5, 15.0, 12.9, 11.3, 9.9, 8.7]
+    };
+
+    const longueurs_linteaux = [1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2, 3.4, 3.6, 3.8, 4];
+
+    function interpolation(longueur, valeurs) {
+      for (let i = 0; i < longueurs_linteaux.length; i++) {
+        if (longueur === longueurs_linteaux[i]) {
+          return valeurs[i];
+        }
+      }
+      for (let i = 0; i < longueurs_linteaux.length - 1; i++) {
+        if (longueur > longueurs_linteaux[i] && longueur < longueurs_linteaux[i + 1]) {
+          let x1 = longueurs_linteaux[i], x2 = longueurs_linteaux[i + 1];
+          let y1 = valeurs[i], y2 = valeurs[i + 1];
+          return y1 + ((longueur - x1) / (x2 - x1)) * (y2 - y1);
+        }
+      }
+      return null;
+    }
+
+    function trouverPlageHomologuée(valeurs, longueur) {
+      let min = longueurs_linteaux[0];
+      let max = longueurs_linteaux[longueurs_linteaux.length - 1];
+      if (longueur < min) {
+        return `Longueur minimale homologuée : ${min} m`;
+      }
+      if (longueur > max) {
+        return `Longueur maximale homologuée : ${max} m`;
+      }
+      return `Longueur non homologuée dans l'intervalle.`;
+    }
+
+    function calculerLinteau() {
+      let longueur = parseFloat(document.getElementById('longueur').value) || 0;
+      let typeLinteau = document.getElementById('type_linteau').value;
+      let hauteur = parseFloat(document.getElementById('hauteur').value) || 0;
+      let blocPoids = parseFloat(document.getElementById('bloc').value) || 0;
+
+      if (longueur < 1 || longueur > 4) {
+        document.getElementById('charge_admissible').innerText = "❌ Longueur hors abaque (1 à 4 m)";
+        document.getElementById('charge_appliquee').innerText = "";
+        document.getElementById('verification').innerText = "";
+        return;
+      }
+
+      let valeurs = abaque_linteaux[typeLinteau];
+      let charge_admissible = interpolation(longueur, valeurs);
+
+      if (charge_admissible === null) {
+        let msg = trouverPlageHomologuée(valeurs, longueur);
+        document.getElementById('charge_admissible').innerText = `❌ Aucune donnée pour cette longueur. ${msg}`;
+        document.getElementById('charge_appliquee').innerText = "";
+        document.getElementById('verification').innerText = "";
+        return;
+      }
+
+      let charge_appliquee = (hauteur * blocPoids) / longueur;
+      document.getElementById('charge_admissible').innerText = `Charge admissible : ${charge_admissible.toFixed(2)} kN/m`;
+      document.getElementById('charge_appliquee').innerText = `Charge appliquée : ${charge_appliquee.toFixed(2)} kN/m`;
+      document.getElementById('verification').innerText = charge_appliquee <= charge_admissible
+        ? "✅ Le linteau est suffisant"
+        : "❌ Le linteau est insuffisant";
+    }
+
+    window.onload = function () {
+      document.querySelectorAll('input, select').forEach(el => {
+        el.addEventListener('input', calculerLinteau);
+        el.addEventListener('change', calculerLinteau);
+      });
+    };
+  </script>
+</body>
+
+</html>

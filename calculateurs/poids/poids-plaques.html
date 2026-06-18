@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Poids des plaques</title>
+  <style>
+    :root{
+      --anth:#2b2f33;   /* gris anthracite pour titres/en-têtes */
+      --muted:#6b7280;  /* gris secondaire */
+      --line:#e5e7eb;   /* bordures légères */
+    }
+
+    /* Fond 100% transparent + typo sobre */
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:transparent;
+      color:#333;
+      margin:0;
+      padding:0;
+    }
+
+    /* Titre principal : texte anthracite, pas de fond */
+    h1{
+      text-align:center;
+      color:var(--anth);
+      margin:14px 0;
+      font-size:18px;
+      font-weight:600;
+    }
+
+    .table-container{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      margin:6px auto 14px;
+      background:transparent; /* ✅ */
+      width:100%;
+      max-width:720px;
+      padding:0 10px;
+    }
+
+    table{
+      border-collapse:collapse;
+      width:100%;
+      max-width:100%;
+      margin:0;
+      background:transparent;          /* ✅ */
+      border:1px solid var(--line);
+      font-size:14px;
+      color:#333;
+    }
+
+    th, td{
+      text-align:center;
+      padding:10px;
+      border:1px solid var(--line);
+    }
+
+    /* En-têtes transparents + texte anthracite */
+    thead th{
+      background:transparent;          /* ✅ */
+      color:var(--anth);               /* ✅ */
+      font-weight:600;
+    }
+
+    select, input{
+      padding:6px 8px;
+      border:1px solid var(--line);
+      border-radius:6px;
+      text-align:center;
+      font-size:14px;
+      background:#fff;                 /* champs lisibles */
+      color:#333;
+    }
+
+    /* Taille fixe et réduite pour tous les champs Quantité */
+    .qty{
+      width:80px;       /* ≈ moitié de la largeur standard */
+      max-width:80px;
+    }
+
+    td span{ white-space:nowrap; }
+
+    /* Mobile */
+    @media (max-width:480px){
+      table{ width:100%; font-size:12px; border:none; }
+      thead{ display:none; }
+      tbody, tr, td{ display:block; width:100%; background:transparent; }
+      tr{
+        margin-bottom:12px;
+        border-bottom:1px solid var(--line);
+        padding:6px 4px;
+      }
+      td{
+        text-align:left;
+        padding:6px 0;
+        border:none;
+      }
+      td::before{
+        content:attr(data-label);
+        display:block;
+        font-weight:600;
+        color:var(--anth);             /* labels en mobile */
+        margin-bottom:4px;
+      }
+      select{ width:100%; }
+      .qty{ width:60%; max-width:none; } /* plus large pour tap sur mobile */
+    }
+  </style>
+</head>
+<body>
+  <h1>Poids des plaques</h1>
+
+  <div class="table-container">
+    <!-- OSB 3 -->
+    <table>
+      <thead>
+        <tr><th colspan="4">OSB 3</th></tr>
+        <tr><th>Dénomination</th><th>Poids</th><th>Quantité</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">
+            <select id="osb-select" oninput="calculateResult('osb')">
+              <option value="10.10">OSB3 12mm — 244×59cm</option>
+              <option value="13.50">OSB3 15mm — 244×59cm</option>
+              <option value="17.00">OSB3 18mm — 244×59cm</option>
+              <option value="19.80">OSB3 22mm — 244×59cm</option>
+            </select>
+          </td>
+          <td data-label="Poids"><span id="osb-weight">10.10 kg</span></td>
+          <td data-label="Quantité"><input class="qty" type="number" id="osb-quantity" min="1" step="1" value="" oninput="calculateResult('osb')"/></td>
+          <td data-label="Résultat"><span id="osb-result">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Agglomérés -->
+    <table>
+      <thead>
+        <tr><th colspan="4">Agglomérés</th></tr>
+        <tr><th>Dénomination</th><th>Poids</th><th>Quantité</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">
+            <select id="agglo-select" oninput="calculateResult('agglo')">
+              <option value="40.00">Agglo 18mm hydro — 125×250cm</option>
+              <option value="48.88">Agglo 22mm hydro — 125×250cm</option>
+            </select>
+          </td>
+          <td data-label="Poids"><span id="agglo-weight">40.00 kg</span></td>
+          <td data-label="Quantité"><input class="qty" type="number" id="agglo-quantity" min="1" step="1" value="" oninput="calculateResult('agglo')"/></td>
+          <td data-label="Résultat"><span id="agglo-result">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Multi filmé -->
+    <table>
+      <thead>
+        <tr><th colspan="4">Multi filmé</th></tr>
+        <tr><th>Dénomination</th><th>Poids</th><th>Quantité</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">
+            <select id="multi-select" oninput="calculateResult('multi')">
+              <option value="7.80">Multi filmé 4mm — 125×250cm</option>
+              <option value="17.57">Multi filmé 9mm — 125×250cm</option>
+              <option value="24.00">Multi filmé 12mm — 125×250cm</option>
+              <option value="33.78">Multi filmé 18mm — 125×250cm</option>
+              <option value="39.40">Multi filmé 21mm — 125×250cm</option>
+            </select>
+          </td>
+          <td data-label="Poids"><span id="multi-weight">7.80 kg</span></td>
+          <td data-label="Quantité"><input class="qty" type="number" id="multi-quantity" min="1" step="1" value="" oninput="calculateResult('multi')"/></td>
+          <td data-label="Résultat"><span id="multi-result">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Gyproc -->
+    <table>
+      <thead>
+        <tr><th colspan="4">Gyproc</th></tr>
+        <tr><th>Dénomination</th><th>Poids</th><th>Quantité</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">
+            <select id="gyproc-select" oninput="calculateResult('gyproc')">
+              <option value="10.81">Gyproc 9.5mm — 60×260cm</option>
+              <option value="14.23">Gyproc 12.5mm — 60×260cm</option>
+              <option value="14.40">Gyproc 12.5mm — 120×240cm</option>
+              <option value="15.60">Gyproc 12.5mm — 120×260cm</option>
+              <option value="16.80">Gyproc 12.5mm — 120×280cm</option>
+            </select>
+          </td>
+          <td data-label="Poids"><span id="gyproc-weight">10.81 kg</span></td>
+          <td data-label="Quantité"><input class="qty" type="number" id="gyproc-quantity" min="1" step="1" value="" oninput="calculateResult('gyproc')"/></td>
+          <td data-label="Résultat"><span id="gyproc-result">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- MDF -->
+    <table>
+      <thead>
+        <tr><th colspan="4">MDF</th></tr>
+        <tr><th>Dénomination</th><th>Poids</th><th>Quantité</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">
+            <select id="mdf-select" oninput="calculateResult('mdf')">
+              <option value="9.75">MDF 4mm — 122×244cm</option>
+              <option value="14.63">MDF 6mm — 122×244cm</option>
+              <option value="18.88">MDF 8mm — 122×244cm</option>
+              <option value="23.22">MDF 12mm — 122×244cm</option>
+              <option value="32.15">MDF 18mm — 122×244cm</option>
+              <option value="40.50">MDF 22mm — 122×244cm</option>
+            </select>
+          </td>
+          <td data-label="Poids"><span id="mdf-weight">9.75 kg</span></td>
+          <td data-label="Quantité"><input class="qty" type="number" id="mdf-quantity" min="1" step="1" value="" oninput="calculateResult('mdf')"/></td>
+          <td data-label="Résultat"><span id="mdf-result">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Lauan -->
+    <table>
+      <thead>
+        <tr><th colspan="4">Lauan</th></tr>
+        <tr><th>Dénomination</th><th>Poids</th><th>Quantité</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">
+            <select id="lauan-select" oninput="calculateResult('lauan')">
+              <option value="7.44">Lauan 5mm — 122×250cm</option>
+              <option value="8.93">Lauan 6mm — 122×250cm</option>
+              <option value="15.48">Lauan 8mm — 122×250cm</option>
+              <option value="18.57">Lauan 10mm — 122×250cm</option>
+              <option value="23.22">Lauan 12mm — 122×250cm</option>
+              <option value="29.02">Lauan 15mm — 122×250cm</option>
+              <option value="34.83">Lauan 18mm — 122×250cm</option>
+              <option value="42.57">Lauan 22mm — 122×250cm</option>
+            </select>
+          </td>
+          <td data-label="Poids"><span id="lauan-weight">7.44 kg</span></td>
+          <td data-label="Quantité"><input class="qty" type="number" id="lauan-quantity" min="1" step="1" value="" oninput="calculateResult('lauan')"/></td>
+          <td data-label="Résultat"><span id="lauan-result">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    const tables = {
+      osb:   { selectId:"osb-select",   weightId:"osb-weight",   quantityId:"osb-quantity",   resultId:"osb-result" },
+      agglo: { selectId:"agglo-select", weightId:"agglo-weight", quantityId:"agglo-quantity", resultId:"agglo-result" },
+      multi: { selectId:"multi-select", weightId:"multi-weight", quantityId:"multi-quantity", resultId:"multi-result" },
+      gyproc:{ selectId:"gyproc-select",weightId:"gyproc-weight",quantityId:"gyproc-quantity",resultId:"gyproc-result" },
+      mdf:   { selectId:"mdf-select",   weightId:"mdf-weight",   quantityId:"mdf-quantity",   resultId:"mdf-result" },
+      lauan: { selectId:"lauan-select", weightId:"lauan-weight", quantityId:"lauan-quantity", resultId:"lauan-result" }
+    };
+
+    function calculateResult(type){
+      const t = tables[type];
+      const select   = document.getElementById(t.selectId);
+      const weightEl = document.getElementById(t.weightId);
+      const qtyEl    = document.getElementById(t.quantityId);
+      const resultEl = document.getElementById(t.resultId);
+
+      const weight   = parseFloat(select.value) || 0;
+      const quantity = parseFloat(qtyEl.value);
+
+      weightEl.textContent = `${weight.toFixed(2)} kg`;
+      if (isNaN(quantity) || quantity <= 0){
+        resultEl.textContent = "—"; // rien tant qu'il n'y a pas de quantité
+      } else {
+        resultEl.textContent = `${(weight * quantity).toFixed(2)} kg`;
+      }
+    }
+
+    // Init : met à jour les poids affichés et laisse les résultats vides
+    ['osb','agglo','multi','gyproc','mdf','lauan'].forEach(calculateResult);
+  </script>
+</body>
+</html>

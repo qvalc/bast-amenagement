@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charge Admissible Plancher Bois</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+
+        input, select {
+            width: 40%;
+            padding: 5px;
+            margin-top: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .result {
+            font-weight: bold;
+            color: blue;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .alert {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Charge Admissible Plancher Bois</h2>
+
+    <label>Section de la poutrelle :</label>
+    <select id="sectionPoutrelle" onchange="calculer()">
+        <option value="5x15">5 x 15 cm</option>
+        <option value="7x18">7 x 18 cm</option>
+        <option value="7x23">7 x 23 cm</option>
+        <option value="10x23">10 x 23 cm</option>
+        <option value="10x25">10 x 25 cm</option>
+        <option value="12x28">12 x 28 cm</option>
+        <option value="6x18">6 x 18 cm (Lamellé-Collé)</option>
+        <option value="8x22">8 x 22 cm (Lamellé-Collé)</option>
+        <option value="10x30">10 x 30 cm (Lamellé-Collé)</option>
+    </select>
+
+    <label>Portée de la poutrelle (m) :</label>
+    <input type="number" id="longueurPoutrelle" step="0.01" placeholder="Entrer une valeur..." oninput="calculer()">
+
+    <label>Type de plancher :</label>
+    <select id="typePlancher" onchange="calculer()">
+        <option value="100">Grenier (100 kg/m²)</option>
+        <option value="150">Habitation standard (150 kg/m²)</option>
+        <option value="200">Plancher supportant des cloisons (200 kg/m²)</option>
+        <option value="250">Commerce, bureau public (250 kg/m²)</option>
+        <option value="400">Plancher technique (400 kg/m²)</option>
+    </select>
+
+    <p class="result" id="resultChargeAdmissible">Charge admissible : <span id="chargeAdmissible"></span> kg/m²</p>
+    <p class="result" id="resultChargeRequise">Charge requise pour ce plancher : <span id="chargeRequise"></span> kg/m²</p>
+    <p class="alert" id="alerte"></p>
+
+    <script>
+        function calculer() {
+            let longueur = parseFloat(document.getElementById("longueurPoutrelle").value);
+            let section = document.getElementById("sectionPoutrelle").value;
+            let chargeRequise = parseFloat(document.getElementById("typePlancher").value);
+
+            if (isNaN(longueur) || longueur <= 0) {
+                document.getElementById("resultChargeAdmissible").style.display = "none";
+                document.getElementById("resultChargeRequise").style.display = "none";
+                document.getElementById("alerte").style.display = "none";
+                return;
+            }
+
+            let chargesAdmissibles = {
+                "5x15": { 2.0: 140, 2.5: 110, 3.0: 90 },
+                "7x18": { 3.0: 180, 3.5: 150, 4.0: 120 },
+                "7x23": { 3.5: 210, 4.0: 180, 4.5: 150 },
+                "10x23": { 4.0: 240, 4.5: 210, 5.0: 180 },
+                "10x25": { 4.5: 270, 5.0: 240, 5.5: 210 },
+                "12x28": { 5.0: 290, 5.5: 260, 6.0: 230 },
+                "6x18": { 3.5: 250, 4.0: 220, 4.5: 190 },
+                "8x22": { 4.0: 270, 4.5: 240, 5.0: 210 },
+                "10x30": { 5.0: 310, 5.5: 280, 6.0: 250 }
+            };
+
+            let sections = chargesAdmissibles[section];
+            let longueursDisponibles = Object.keys(sections).map(parseFloat).sort((a, b) => a - b);
+            let chargeAdmissible = 0;
+
+            if (longueur < longueursDisponibles[0]) {
+                let Lmin = longueursDisponibles[0];
+                let Cmin = sections[Lmin];
+
+                // 🔹 Augmentation exponentielle pour les petites portées
+                chargeAdmissible = Cmin * Math.pow(Lmin / longueur, 1.5);
+
+                // 🔹 Correction : Ne pas dépasser 7000 kg/m²
+                if (chargeAdmissible > 7000) {
+                    chargeAdmissible = 7000;
+                }
+            } 
+            else if (longueur > longueursDisponibles[longueursDisponibles.length - 1]) {
+                let Lmax = longueursDisponibles[longueursDisponibles.length - 1];
+                let Cmax = sections[Lmax];
+
+                let facteurReduction = 1 / Math.pow(longueur / Lmax, 3.5);
+                chargeAdmissible = Cmax * facteurReduction;
+            } 
+            else {
+                for (let i = 0; i < longueursDisponibles.length - 1; i++) {
+                    let L1 = longueursDisponibles[i];
+                    let L2 = longueursDisponibles[i + 1];
+
+                    if (longueur >= L1 && longueur <= L2) {
+                        let C1 = sections[L1];
+                        let C2 = sections[L2];
+                        chargeAdmissible = C1 + ((C2 - C1) / (L2 - L1)) * (longueur - L1);
+                        break;
+                    }
+                }
+            }
+
+            document.getElementById("chargeAdmissible").textContent = chargeAdmissible.toFixed(1);
+            document.getElementById("chargeRequise").textContent = chargeRequise;
+            document.getElementById("resultChargeAdmissible").style.display = "block";
+            document.getElementById("resultChargeRequise").style.display = "block";
+
+            if (chargeAdmissible < chargeRequise) {
+                document.getElementById("alerte").textContent = "⚠️ Attention : la charge admissible est inférieure à la charge requise.";
+                document.getElementById("alerte").style.display = "block";
+            } else {
+                document.getElementById("alerte").style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

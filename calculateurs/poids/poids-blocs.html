@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Poids des blocs</title>
+  <style>
+    :root{
+      --anth:#2b2f33;     /* gris anthracite pour les titres */
+      --muted:#6b7280;    /* gris secondaire */
+      --line:#e5e7eb;     /* bordures légères */
+    }
+
+    /* Fond 100% transparent + typographie sobre */
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: transparent;
+      color:#333;
+      margin:0;
+      padding:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      min-height:100vh;
+      text-align:center;
+    }
+
+    /* Titres anthracite, sans fond */
+    header{
+      width:100%;
+      background: transparent;
+      padding:10px 0;
+    }
+    header h1,
+    .container h1{
+      margin:0 0 14px;
+      font-size:18px;
+      color:var(--anth);
+      font-weight:600;
+    }
+
+    /* Cartes transparentes, sans ombre */
+    .container{
+      background: transparent;
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:18px;
+      max-width:420px;
+      width:92%;
+      margin:14px auto;
+    }
+
+    label{
+      font-weight:600;
+      color:var(--muted);
+      margin-top:8px;
+      display:block;
+      font-size:13px;
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"]{
+      width:100%;
+      padding:10px;
+      margin:10px 0;
+      border:1px solid var(--line);
+      border-radius:6px;
+      box-sizing:border-box;
+      font-size:14px;
+      background:#fff;         /* champs non transparents pour la lisibilité */
+      color:#333;
+      text-align:center;
+    }
+
+    input[type="text"]{
+      cursor:not-allowed;
+    }
+
+    button{
+      background: var(--anth);
+      color:#fff;
+      padding:10px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      width:100%;
+      font-size:14px;
+    }
+    button:hover{ opacity:.92; }
+
+    @media (max-width:768px){
+      .container{ padding:14px; }
+      label{ font-size:12px; }
+      select, input, button{ font-size:13px; padding:8px; }
+    }
+  </style>
+
+  <script>
+    const poidsBlocs = {
+      "Argex": {9: 6.20, 14: 8.60, 19: 10.30, 29: 17.00},
+      "Beton creux": {9: 11.30, 14: 14.64, 19: 18.34, 29: 26.93},
+      "Beton plein": {9: 13.50, 14: 22.00, 19: 29.80, 29: null}
+    };
+
+    const poidsStepoc = {
+      "Stepoc droit A": {"60/20/15": 21.00, "60/20/40": 35.00},
+      "Stepoc droit N/A": {"60/20/19": 23.00, "60/20/30": 26.50},
+      "Stepoc droit N": {"60/20/24": 24.00, "60/20/40": 37.50, "60/20/55": 31.50},
+      "Stépoc Rond N": {"60/20/28": 28.00}
+    };
+
+    const poidsCellulaire = {
+      "Blocs standard": {
+        "5": 5.74, "7.5": 8.61, "10": 11.48, "15": 12.42, "20": 16.57, "24": 19.89
+      },
+      "Blocs d'assise hydrophobes": {
+        "9": 8.9, "14": 13.8, "19": 18.8
+      }
+    };
+
+    function calculerPoids(type, taille, quantite, resultId, data) {
+      if (type && taille && quantite > 0) {
+        const poidsUnitaire = data[type]?.[taille];
+        document.getElementById(resultId).value =
+          (poidsUnitaire != null) ? `${(poidsUnitaire * quantite).toFixed(2)} kg` : "NA";
+      } else {
+        document.getElementById(resultId).value = "-";
+      }
+    }
+
+    function calculerPoidsBlocs() {
+      const type = document.getElementById("type-bloc").value;
+      const taille = document.getElementById("taille-bloc").value;
+      const quantite = parseFloat(document.getElementById("quantite").value);
+      calculerPoids(type, taille, quantite, "resultat", poidsBlocs);
+    }
+
+    function mettreAJourTailleStepoc() {
+      const denomination = document.getElementById("denomination-stepoc").value;
+      const tailleSelect = document.getElementById("taille-stepoc");
+      tailleSelect.innerHTML = '<option value="" disabled selected>Sélectionnez une taille</option>';
+      if (denomination && poidsStepoc[denomination]) {
+        Object.keys(poidsStepoc[denomination]).forEach(taille => {
+          const option = document.createElement("option");
+          option.value = taille;
+          option.textContent = taille;
+          tailleSelect.appendChild(option);
+        });
+      }
+    }
+
+    function calculerPoidsStepoc() {
+      const denomination = document.getElementById("denomination-stepoc").value;
+      const taille = document.getElementById("taille-stepoc").value;
+      const quantite = parseFloat(document.getElementById("quantite-stepoc").value);
+      calculerPoids(denomination, taille, quantite, "resultat-stepoc", poidsStepoc);
+    }
+
+    function mettreAJourTailleCellulaire() {
+      const typeBloc = document.getElementById("type-cellulaire").value;
+      const tailleSelect = document.getElementById("taille-cellulaire");
+      tailleSelect.innerHTML = '<option value="" disabled selected>Sélectionnez une taille</option>';
+      if (typeBloc && poidsCellulaire[typeBloc]) {
+        Object.keys(poidsCellulaire[typeBloc]).forEach(taille => {
+          const option = document.createElement("option");
+          option.value = taille;
+          option.textContent = `${taille} cm`;
+          tailleSelect.appendChild(option);
+        });
+      }
+    }
+
+    function calculerPoidsCellulaire() {
+      const typeBloc = document.getElementById("type-cellulaire").value;
+      const taille = document.getElementById("taille-cellulaire").value;
+      const quantite = parseFloat(document.getElementById("quantite-cellulaire").value);
+      calculerPoids(typeBloc, taille, quantite, "resultat-cellulaire", poidsCellulaire);
+    }
+  </script>
+</head>
+<body>
+  <header>
+    <h1>Calculateur Poids des blocs</h1>
+  </header>
+
+  <div class="container">
+    <h1>Blocs</h1>
+    <label for="type-bloc">Type de bloc :</label>
+    <select id="type-bloc" onchange="calculerPoidsBlocs()">
+      <option value="" disabled selected>Sélectionnez un type</option>
+      <option value="Argex">Argex</option>
+      <option value="Beton creux">Béton creux</option>
+      <option value="Beton plein">Béton plein</option>
+    </select>
+
+    <label for="taille-bloc">Taille du bloc :</label>
+    <select id="taille-bloc" onchange="calculerPoidsBlocs()">
+      <option value="" disabled selected>Sélectionnez une taille</option>
+      <option value="9">9</option>
+      <option value="14">14</option>
+      <option value="19">19</option>
+      <option value="29">29</option>
+    </select>
+
+    <label for="quantite">Nombre de blocs :</label>
+    <input type="number" id="quantite" min="1" value="" oninput="calculerPoidsBlocs()">
+
+    <label for="resultat">Poids total :</label>
+    <input type="text" id="resultat" readonly>
+
+    <button onclick="calculerPoidsBlocs()">Calculer</button>
+  </div>
+
+  <div class="container">
+    <h1>Stépoc</h1>
+    <label for="denomination-stepoc">Dénomination :</label>
+    <select id="denomination-stepoc" onchange="mettreAJourTailleStepoc(); calculerPoidsStepoc();">
+      <option value="" disabled selected>Sélectionnez un type</option>
+      <option value="Stepoc droit A">Stepoc droit A</option>
+      <option value="Stepoc droit N/A">Stepoc droit N/A</option>
+      <option value="Stepoc droit N">Stepoc droit N</option>
+      <option value="Stépoc Rond N">Stépoc Rond N</option>
+    </select>
+
+    <label for="taille-stepoc">Taille :</label>
+    <select id="taille-stepoc" onchange="calculerPoidsStepoc()">
+      <option value="" disabled selected>Sélectionnez une taille</option>
+    </select>
+
+    <label for="quantite-stepoc">Nombre de blocs :</label>
+    <input type="number" id="quantite-stepoc" min="1" value="" oninput="calculerPoidsStepoc()">
+
+    <label for="resultat-stepoc">Poids total :</label>
+    <input type="text" id="resultat-stepoc" readonly>
+
+    <button onclick="calculerPoidsStepoc()">Calculer</button>
+  </div>
+
+  <div class="container">
+    <h1>Cellulaires H+H</h1>
+    <label for="type-cellulaire">Type de bloc :</label>
+    <select id="type-cellulaire" onchange="mettreAJourTailleCellulaire(); calculerPoidsCellulaire();">
+      <option value="" disabled selected>Sélectionnez un type</option>
+      <option value="Blocs standard">Blocs standard</option>
+      <option value="Blocs d'assise hydrophobes">Blocs d'assise hydrophobes</option>
+    </select>
+
+    <label for="taille-cellulaire">Épaisseur :</label>
+    <select id="taille-cellulaire" onchange="calculerPoidsCellulaire()">
+      <option value="" disabled selected>Sélectionnez une taille</option>
+    </select>
+
+    <label for="quantite-cellulaire">Nombre de blocs :</label>
+    <input type="number" id="quantite-cellulaire" min="1" value="" oninput="calculerPoidsCellulaire()">
+
+    <label for="resultat-cellulaire">Poids total :</label>
+    <input type="text" id="resultat-cellulaire" readonly>
+
+    <button onclick="calculerPoidsCellulaire()">Calculer</button>
+  </div>
+</body>
+</html>

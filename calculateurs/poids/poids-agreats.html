@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculateur poids des Agrégats</title>
+  <style>
+    :root{
+      --anth:#2b2f33;   /* gris anthracite pour les titres/labels */
+      --line:#e5e7eb;   /* bordures légères */
+      --muted:#6b7280;  /* gris secondaire */
+    }
+
+    /* Fond de page transparent */
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:transparent;
+      color:#333;
+      margin:0;
+      padding:0;
+    }
+
+    /* Titre sans fond, texte anthracite */
+    h1{
+      text-align:center;
+      color:var(--anth);
+      margin:14px 0;
+      font-size:18px;
+      font-weight:700;
+    }
+
+    .table-container{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      margin:8px auto 16px;
+      background:transparent;          /* ✅ */
+      width:100%;
+      max-width:720px;
+      padding:0 10px;
+    }
+
+    .input-container{
+      text-align:center;
+      margin-bottom:6px;
+    }
+
+    .input-container label{
+      display:block;
+      font-size:13px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+
+    /* Champs lisibles (fond blanc), taille compacte et centrage */
+    select, input{
+      padding:6px 8px;
+      border:1px solid var(--line);
+      border-radius:8px;
+      text-align:center;
+      font-size:14px;
+      background:#fff;                 /* ✅ lisible sur fond transparent */
+      color:#333;
+    }
+
+    /* Quantité compacte */
+    #aggregate-quantity{
+      width:90px;                      /* plus petit et fixe */
+      max-width:90px;
+    }
+
+    table{
+      border-collapse:collapse;
+      width:100%;
+      max-width:100%;
+      margin:0;
+      background:transparent;          /* ✅ */
+      border:1px solid var(--line);
+      font-size:14px;
+      color:#333;
+    }
+
+    th, td{
+      text-align:center;
+      padding:10px;
+      border:1px solid var(--line);
+    }
+
+    /* En-têtes transparents + texte anthracite */
+    thead th{
+      background:transparent;          /* ✅ */
+      color:var(--anth);               /* ✅ */
+      font-weight:700;
+    }
+
+    td span{ white-space:nowrap; }
+
+    /* Mobile */
+    @media (max-width:480px){
+      table{ width:100%; font-size:12px; border:none; }
+      thead{ display:none; }
+      tbody, tr, td{ display:block; width:100%; background:transparent; }
+      tr{
+        margin-bottom:12px;
+        border-bottom:1px solid var(--line);
+        padding:6px 4px;
+      }
+      td{
+        text-align:left;
+        padding:6px 0;
+        border:none;
+      }
+      td::before{
+        content:attr(data-label);
+        display:block;
+        font-weight:600;
+        color:var(--anth);             /* labels en mobile */
+        margin-bottom:4px;
+      }
+      select{ width:100%; }
+      #aggregate-quantity{ width:60%; max-width:none; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Calculateur poids des Agrégats</h1>
+
+  <div class="table-container">
+    <div class="input-container">
+      <label for="aggregate-quantity">Quantité (m³)</label>
+      <input type="number" id="aggregate-quantity" value="" min="0.1" step="0.1" oninput="calculateAggregate()">
+    </div>
+
+    <table>
+      <thead>
+        <tr><th colspan="3">Agrégats</th></tr>
+        <tr><th>Dénomination</th><th>Poids moyen (kg/m³)</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">
+            <select id="aggregate-select" onchange="calculateAggregate()">
+              <option value="1700">Sable de Rhin</option>
+              <option value="1550">Sable jaune</option>
+              <option value="1650">Concassé 0/4</option>
+              <option value="1600">Mélange mortier</option>
+              <option value="2200">Béton sec</option>
+              <option value="2500">Béton frais</option>
+              <option value="1650">Grenaille 7/14</option>
+            </select>
+          </td>
+          <td data-label="Poids moyen"><span id="aggregate-weight">1700 kg/m³</span></td>
+          <td data-label="Résultat"><span id="aggregate-result">—</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function calculateAggregate() {
+      const select = document.getElementById("aggregate-select");
+      const weightSpan = document.getElementById("aggregate-weight");
+      const resultSpan = document.getElementById("aggregate-result");
+      const quantityInput = document.getElementById("aggregate-quantity");
+
+      const density = parseFloat(select.value) || 0;              // kg/m³
+      const qty = parseFloat(quantityInput.value);                 // m³
+
+      // Affichage du poids moyen
+      weightSpan.textContent = `${density.toFixed(0)} kg/m³`;
+
+      // Résultat seulement si une quantité valable est saisie
+      if (isNaN(qty) || qty <= 0) {
+        resultSpan.textContent = "—";
+      } else {
+        const total = density * qty;                               // kg
+        resultSpan.textContent = `${total.toFixed(0)} kg`;
+      }
+    }
+
+    // Initialisation à l'ouverture
+    window.onload = calculateAggregate;
+  </script>
+</body>
+</html>

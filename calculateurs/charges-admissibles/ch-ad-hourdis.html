@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Charge Admissible Hourdis</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+        background: transparent; /* ✅ fond transparent */
+    }
+
+    h2 {
+        color: #2b2f33; /* ✅ gris anthracite */
+        margin-bottom: 20px;
+    }
+
+    .container {
+        background: transparent; /* ✅ fond transparent */
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+        border-radius: 8px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+        display: block;
+        margin-bottom: 6px;
+        font-size: 14px;
+        color: #2b2f33;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 8px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        background: #fff; /* ✅ cases visibles et uniformes */
+        text-align: center; /* ✅ texte centré dans les cases */
+    }
+
+    #result {
+        font-size: 18px;
+        font-weight: bold;
+        color: #2e7d32;
+        margin-top: 15px;
+    }
+
+    #warning {
+        font-size: 14px;
+        font-weight: bold;
+        color: red;
+        display: none;
+        margin-top: 10px;
+    }
+
+    @media (max-width: 600px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Charge Admissible Hourdis</h2>
+
+    <div class="grid">
+        <div>
+            <label for="hourdisSize">Épaisseur des Hourdis (cm)</label>
+            <select id="hourdisSize" onchange="calculerCharge()">
+                <option value="16">16</option>
+                <option value="20">20</option>
+                <option value="25">25</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="hourdisLength">Longueur des Hourdis (m)</label>
+            <input type="number" id="hourdisLength" placeholder="Ex: 4.5" step="0.1" min="1" max="7" oninput="calculerCharge()">
+        </div>
+
+        <div>
+            <label for="dalleEpaisseur">Épaisseur de la Dalle (cm)</label>
+            <select id="dalleEpaisseur" onchange="calculerCharge()">
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="8">8</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="ferraillage">Ferraillage</label>
+            <select id="ferraillage" onchange="calculerCharge()">
+                <option value="simple">Simple</option>
+                <option value="renforce">Renforcé</option>
+            </select>
+        </div>
+    </div>
+
+    <p id="warning">⚠️ La longueur maximale autorisée est de 7 mètres.</p>
+    <p id="result">Charge admissible : -- kg/m²</p>
+</div>
+
+<script>
+function calculerCharge() {
+    let hourdisSize = parseInt(document.getElementById("hourdisSize").value);
+    let hourdisLength = parseFloat(document.getElementById("hourdisLength").value);
+    let dalleEpaisseur = parseInt(document.getElementById("dalleEpaisseur").value);
+    let ferraillage = document.getElementById("ferraillage").value;
+    let warningMessage = document.getElementById("warning");
+
+    if (hourdisLength > 7) {
+        warningMessage.style.display = "block";
+        document.getElementById("result").innerText = "Charge admissible : -- kg/m²";
+        return;
+    } else {
+        warningMessage.style.display = "none";
+    }
+
+    if (isNaN(hourdisLength) || hourdisLength <= 0) {
+        document.getElementById("result").innerText = "Veuillez entrer une longueur valide.";
+        return;
+    }
+
+    let charges = {
+        16: { "3m": 450, "4m": 400, "5m": 350, "6m": 300, "7m": 250 },
+        20: { "3m": 550, "4m": 500, "5m": 450, "6m": 400, "7m": 350 },
+        25: { "3m": 650, "4m": 600, "5m": 550, "6m": 500, "7m": 450 }
+    };
+
+    let longueurKey;
+    if (hourdisLength <= 3) longueurKey = "3m";
+    else if (hourdisLength <= 4) longueurKey = "4m";
+    else if (hourdisLength <= 5) longueurKey = "5m";
+    else if (hourdisLength <= 6) longueurKey = "6m";
+    else longueurKey = "7m";
+
+    let chargeBase = charges[hourdisSize][longueurKey];
+
+    if (dalleEpaisseur > 6) chargeBase *= 1.2;
+    else if (dalleEpaisseur < 5) chargeBase *= 0.9;
+
+    if (ferraillage === "renforce") chargeBase *= 1.15;
+
+    chargeBase = Math.round(chargeBase);
+    document.getElementById("result").innerText = `Charge admissible : ${chargeBase} kg/m²`;
+}
+
+calculerCharge();
+</script>
+
+</body>
+</html>

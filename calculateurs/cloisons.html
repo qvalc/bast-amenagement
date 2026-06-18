@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Structures & Habillages — Simple & Fonctionnel</title>
+<style>
+  :root{--fg:#111827;--muted:#6b7280;--line:#e5e7eb;--anth:#2b2f33}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--fg);background:transparent} /* ✅ transparent */
+  .wrap{max-width:680px;margin:20px auto;padding:0 14px}
+  h1{font-size:18px;margin:0 0 12px;color:var(--anth)} /* ✅ titre gris anthracite */
+  .form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:640px){.form{grid-template-columns:1fr}}
+  label{display:block;font-size:12px;color:var(--muted);margin:0 0 6px}
+  input,select{width:100%;height:36px;border:1px solid var(--line);border-radius:8px;padding:0 10px;font-size:14px;background:#fff}
+  .section{padding-top:14px;border-top:1px solid var(--line);margin-top:14px}
+  .list{display:grid;grid-template-columns:minmax(150px,1fr) auto;gap:6px 12px;align-items:baseline;margin-top:10px}
+  .k{color:var(--muted);font-size:13px}
+  .v{font-size:14px}
+  .hidden{display:none}
+  .hint{color:var(--muted);font-size:12px;margin-top:8px}
+  /* Mobile list labels en anthracite (au lieu de bleu) si tu passes en table responsive plus tard */
+  @media (max-width:640px){
+    .list .k{color:var(--anth)}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Structures & Habillages</h1>
+
+  <div class="form">
+    <div>
+      <label for="L">Longueur (m)</label>
+      <input id="L" type="number" step="0.01" oninput="calc()" />
+    </div>
+    <div>
+      <label for="H">Hauteur / Largeur (m)</label>
+      <input id="H" type="number" step="0.01" oninput="calc()" />
+    </div>
+    <div>
+      <label for="EX">Entraxe (m)</label>
+      <input id="EX" type="number" step="0.01" value="0.40" oninput="calc()" />
+    </div>
+    <div>
+      <label for="LB">Longueur des barres (m)</label>
+      <select id="LB" onchange="calc()">
+        <option value="0">—</option>
+        <option value="2.40">2,40</option>
+        <option value="2.70">2,70</option>
+        <option value="3.00">3,00</option>
+        <option value="3.60">3,60</option>
+        <option value="4.20">4,20</option>
+        <option value="4.80">4,80</option>
+      </select>
+    </div>
+    <div>
+      <label for="CL">Contre-lattage</label>
+      <select id="CL" onchange="toggleCL();calc()">
+        <option value="non">Non</option>
+        <option value="oui">Oui</option>
+      </select>
+    </div>
+    <div id="clx" class="hidden">
+      <label for="EXC">Entraxe contre-lattage (m)</label>
+      <input id="EXC" type="number" step="0.01" value="0.40" oninput="calc()" />
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="form" style="grid-template-columns:1fr 1fr 1fr">
+      <div>
+        <label for="MAT">Type de panneau</label>
+        <select id="MAT" onchange="onMatChange();calc()">
+          <option value="platre">Plaque de plâtre</option>
+          <option value="osb">OSB</option>
+        </select>
+      </div>
+      <div>
+        <label for="F">Faces</label>
+        <select id="F" onchange="calc()">
+          <option value="1">1 face</option>
+          <option value="2">2 faces</option>
+        </select>
+      </div>
+      <div>
+        <label for="TP">Format</label>
+        <select id="TP" onchange="calc()">
+          <option value="120x260">120×260 (plâtre)</option>
+          <option value="60x260">60×260 (plâtre)</option>
+          <option value="244x59_osb">244×59 (OSB)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="list">
+      <div class="k">Ossature — longues</div><div class="v" id="oss_nb">0</div>
+      <div class="k">Ossature — ML</div><div class="v" id="oss_ml">0,00 m</div>
+      <div class="k">Barres estimées</div><div class="v" id="oss_pc">0</div>
+      <div class="k">Contre-lattage — longues</div><div class="v" id="cl_nb">0</div>
+      <div class="k">Contre-lattage — ML</div><div class="v" id="cl_ml">0,00 m</div>
+      <div class="k">Barres contre-lattage</div><div class="v" id="cl_pc">0</div>
+      <div class="k">Surface totale</div><div class="v" id="surf">0,00 m²</div>
+      <div class="k">Panneaux nécessaires</div><div class="v" id="plaq">0</div>
+      <div class="k">Joints estimés</div><div class="v" id="joints">0,00 m</div>
+      <div class="k">FibaTape</div><div class="v" id="tape">0</div>
+      <div class="k">Enduit (sacs)</div><div class="v" id="enduit">0</div>
+    </div>
+    <p class="hint">OSB : format pris à 244×59 cm (2,44×0,59 m). Pour OSB, joints/bande/enduit sont mis à 0 par défaut.</p>
+  </div>
+</div>
+
+<script>
+  function g(id){return document.getElementById(id)}
+  function n(v){v=(v==null?"0":String(v)).replace(',','.');var x=parseFloat(v);return isFinite(x)?x:0}
+  function f2(x){x=Number(x||0);return (Math.round(x*100)/100).toFixed(2).replace('.',',')}
+  function f0(x){x=Number(x||0);return String(Math.round(x))}
+
+  function toggleCL(){ var s=g('CL').value; g('clx').className = (s==='oui')? '' : 'hidden'; }
+  function onMatChange(){ var m=g('MAT').value; var faces=g('F'); var tp=g('TP'); if(m==='osb'){ faces.value='1'; faces.disabled=true; tp.value='244x59_osb'; } else { faces.disabled=false; if(tp.value==='244x59_osb') tp.value='120x260'; } }
+
+  function resetOut(){ g('oss_nb').textContent='0'; g('oss_ml').textContent='0,00 m'; g('oss_pc').textContent='0';
+    g('cl_nb').textContent='0'; g('cl_ml').textContent='0,00 m'; g('cl_pc').textContent='0';
+    g('surf').textContent='0,00 m²'; g('plaq').textContent='0'; g('joints').textContent='0,00 m'; g('tape').textContent='0'; g('enduit').textContent='0'; }
+
+  function calc(){
+    var L=n(g('L').value), H=n(g('H').value), EX=n(g('EX').value), LB=n(g('LB').value);
+    var MAT=g('MAT').value; var F=parseInt(g('F').value,10)||1; var TP=g('TP').value;
+    if(!(L>0 && H>0)){ resetOut(); return }
+
+    // Ossature principale
+    var nb=0, ml=0, pc=0;
+    if(EX>0){ nb=Math.ceil(L/EX + 1); ml=nb*H; if(LB>0) pc=Math.ceil(ml/LB) }
+    g('oss_nb').textContent=f0(nb); g('oss_ml').textContent=f2(ml)+' m'; g('oss_pc').textContent=f0(pc);
+
+    // Contre-lattage
+    var clnb=0, clml=0, clpc=0; if(g('CL').value==='oui'){ var EXC=n(g('EXC').value); if(EXC>0){ clnb=Math.ceil(H/EXC + 1); clml=clnb*L; if(LB>0) clpc=Math.ceil(clml/LB) } }
+    g('cl_nb').textContent=f0(clnb); g('cl_ml').textContent=f2(clml)+' m'; g('cl_pc').textContent=f0(clpc);
+
+    // Panneaux
+    var w,h,facesEff, showFinition=true;
+    if(MAT==='osb'){ w=2.44; h=0.59; facesEff=1; showFinition=false; }
+    else { facesEff=F; if(TP==='120x260'){ w=1.20; h=2.60; } else if(TP==='60x260'){ w=0.60; h=2.60; } else { w=1.20; h=2.60; } }
+
+    var surf=L*H*facesEff; var surfP=w*h; var plaq=Math.ceil(surf/surfP);
+    var cols=Math.ceil(L/w), rows=Math.ceil(H/h); var jt=(showFinition? (cols*H + rows*L)*facesEff : 0);
+    var tapes= showFinition? Math.ceil(jt/90) : 0; var conso= (MAT==='osb')? 0 : (TP==='120x260'?0.40:0.65); var sacs= showFinition? Math.ceil((surf*conso)/25) : 0;
+
+    g('surf').textContent=f2(surf)+' m²'; g('plaq').textContent=f0(plaq); g('joints').textContent=f2(jt)+' m'; g('tape').textContent=f0(tapes); g('enduit').textContent=f0(sacs);
+  }
+
+  // init
+  toggleCL(); onMatChange(); calc();
+</script>
+</body>
+</html>

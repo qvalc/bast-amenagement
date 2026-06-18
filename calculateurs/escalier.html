@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Escaliers</title>
+<style>
+  :root{
+    --bg:#e5e7eb;               /* pour test local – tu peux mettre transparent sur Wix */
+    --card:rgba(255,255,255,0.94);
+    --ink:#111111;              /* texte sombre */
+    --muted:#555555;
+    --accent:#2b6cff;           /* bleu discret pour focus */
+    --grid:#cccccc;             /* grille plus claire */
+    --axis:#555555;
+    --path:#e28b00;             /* ligne du graphe contrastée */
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font:16px/1.45 system-ui, -apple-system, BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Ubuntu,Arial,sans-serif;
+  }
+
+  header{
+    padding:18px 18px 6px;
+    text-align:center;
+  }
+  header h1{
+    margin:0 0 4px;
+    font-size:1.35rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:#000;
+    font-weight:500;
+  }
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto 24px;
+    padding:0 14px 18px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid rgba(0,0,0,0.04);
+    border-radius:22px;
+    padding:14px 14px 16px;
+    box-shadow:
+      0 18px 45px rgba(15,23,42,0.10),
+      0 0 0 1px rgba(255,255,255,0.6);
+    backdrop-filter:blur(18px);
+  }
+
+  .controls{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:12px;
+    align-items:end;
+    margin:6px 0 8px;
+  }
+
+  .toggle,.options{
+    grid-column:1/-1;
+    display:flex;flex-wrap:wrap;gap:10px;
+    align-items:center;padding:8px 12px;
+    border:1px solid #e5e7eb;border-radius:14px;
+    background:#ffffff;
+  }
+
+  label{
+    display:block;
+    font-size:12px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .toggle label,.options label{
+    display:flex;align-items:center;gap:8px;margin:0;
+    color:var(--ink);
+    font-size:13px;
+  }
+
+  input[type="text"], input[type="number"]{
+    width:100%;padding:10px 12px;
+    background:#fff;color:var(--ink);
+    border:1px solid #d1d5db;border-radius:999px;
+    outline:none;font-size:15px;
+  }
+  input:focus{
+    border-color:var(--accent);
+    box-shadow:0 0 0 5px #2b6cff22;
+  }
+  input:disabled{opacity:.6;cursor:not-allowed}
+
+  .btn{
+    width:100%;
+    padding:10px 12px;border-radius:999px;
+    border:1px solid #d1d5db;
+    background:#ffffff;color:#111;
+    cursor:pointer;font-size:14px;
+    transition:background 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+  }
+  .btn:hover{
+    background:#f9fafb;
+    box-shadow:0 4px 10px rgba(15,23,42,0.08);
+    transform:translateY(-0.5px);
+  }
+  .btn:active{
+    box-shadow:none;
+    transform:translateY(0);
+  }
+
+  .hint{
+    font-size:13px;
+    color:var(--muted);
+    margin:6px 0 8px;
+  }
+  #alert{margin:6px 0 2px}
+
+  /* ===== Graphe ===== */
+  #chart{
+    width:100%;
+    min-height:260px;
+    background:#fff;
+    border-radius:16px;
+    border:1px solid #e5e7eb;
+  }
+  .axes text{font-size:11px;fill:var(--axis)}
+  .tick line{stroke:var(--grid);stroke-width:1}
+  .path{fill:none;stroke:var(--path);stroke-width:3}
+  .dot{fill:var(--path);stroke:#fff;stroke-width:1.1}
+  .label{font-size:11px;fill:#333}
+
+  @media (max-width: 768px){
+    .wrap{padding:0 10px 16px}
+    header h1{font-size:1.1rem}
+    .controls{gap:10px}
+    .axes text{font-size:13px}
+    .tick line{stroke-width:1.5}
+    .path{stroke-width:3.5}
+    .dot{stroke-width:1; r:4.5}
+    .label{font-size:13px}
+  }
+
+  /* ===== Tableau ===== */
+  #segments-card{margin-top:14px}
+  #segments-card h3{
+    margin:0 0 8px;
+    font-size:0.98rem;
+    font-weight:600;
+    color:#111827;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+  }
+
+  .table-wrap{
+    max-height:420px;
+    overflow:auto;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    background:#ffffff;
+  }
+  table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:14px;
+    background:#fff;
+    table-layout:fixed;
+  }
+  thead th{
+    position:sticky;top:0;
+    background:#f9fafb;
+    color:#111827;
+    padding:9px 10px;
+    border-bottom:1px solid #d1d5db;
+    z-index:1;
+  }
+  th,td{padding:9px 10px}
+  tbody tr:nth-child(even){background:#f4f5f7}
+  td{border-bottom:1px solid #eef0f3}
+  th.num, td.num{text-align:right;font-feature-settings:"tnum" 1}
+  th.left, td.left{text-align:left}
+
+  .info{
+    color:#111827;
+    background:linear-gradient(180deg,#ffe9b3,#ffd57a);
+    border:0;
+    padding:8px 10px;
+    border-radius:999px;
+    display:inline-block;
+    font-size:13px;
+  }
+
+  /* Impression propre */
+  @media print{
+    @page{size:A4 landscape;margin:10mm}
+    body{background:#fff;color:#111;font:10pt/1.35 system-ui}
+    header{padding:0 0 4mm}
+    header h1{font-size:14pt;margin-bottom:2mm;color:#000}
+    .hint,.no-print{display:none!important}
+    .wrap{max-width:none;padding:0}
+    .card{border:none;box-shadow:none;background:#fff;padding:0}
+    #page1{break-inside:avoid;height:170mm;margin:0}
+    #chart{height:170mm;border:none;background:#fff;border-radius:0}
+    .axes text{fill:#000;font-size:9pt}
+    .tick line{stroke:#bbb;stroke-width:0.8}
+    .path{stroke:#e28b00;stroke-width:2.5}
+    .dot{stroke:#fff;stroke-width:0.6;fill:#e28b00}
+    .label{fill:#333;font-size:9pt}
+    #segments-card{break-before:page;break-inside:avoid;margin-top:0}
+    .table-wrap{max-height:none;border:none}
+    table{font-size:9.5pt;border:none;background:#fff}
+    thead th{position:static;background:#fff;border-bottom:2px solid #000;color:#000}
+    td{border-bottom:1px solid #ccc}
+    tbody tr:nth-child(even){background:#f5f7fb}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Escaliers</h1>
+</header>
+
+<div class="wrap">
+  <!-- PAGE 1 -->
+  <section class="card" id="page1">
+    <div class="controls">
+      <div class="toggle">
+        <label><input id="modeSlope" type="checkbox" /> <strong>Utiliser la pente cible</strong></label>
+        <small style="font-size:12px;color:var(--muted);">
+          Coché : calcule <b>n</b> et peut ajuster <b>h</b> si « Ajuster les marches » est activé. Décoché : mode manuel.
+        </small>
+      </div>
+
+      <div class="options">
+        <label><input id="adjustAll" type="checkbox" /> Ajuster les marches (fixe h = H / n)</label>
+        <small id="adjustHint" style="color:var(--muted);font-size:12px;">
+          Disponible : en mode pente 0 % ou en mode manuel. Requiert n &gt; 0.
+        </small>
+      </div>
+
+      <div>
+        <label for="L">Longueur L (cm)</label>
+        <input id="L" inputmode="decimal" placeholder="">
+      </div>
+      <div>
+        <label for="H">Dénivelé H (cm)</label>
+        <input id="H" inputmode="decimal" placeholder="">
+      </div>
+      <div>
+        <label for="h">Hauteur d’une marche h (cm)</label>
+        <input id="h" inputmode="decimal" placeholder="">
+      </div>
+      <div>
+        <label for="targetSlope">Pente cible (%)</label>
+        <input id="targetSlope" type="number" step="0.1" placeholder="">
+      </div>
+      <div>
+        <label for="n">Nombre de marches n</label>
+        <input id="n" type="number" min="0" max="200" placeholder="">
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button class="btn no-print" id="printBtn">Imprimer</button>
+      </div>
+      <div>
+        <label>&nbsp;</label>
+        <button class="btn no-print" id="reset">Réinitialiser</button>
+      </div>
+    </div>
+
+    <p class="hint">Formule : pente (%) = (H − n·h) / L × 100. Valeurs en <b>centimètres</b> (cm).</p>
+    <div id="alert"></div>
+
+    <!-- SVG -->
+    <svg id="chart"></svg>
+  </section>
+
+  <!-- PAGE 2 -->
+  <section class="card" id="segments-card">
+    <h3>Tableau des segments</h3>
+    <div class="table-wrap">
+      <table id="table">
+        <thead>
+          <tr>
+            <th class="left">#</th>
+            <th class="left">Type</th>
+            <th class="num">Longueur (cm)</th>
+            <th class="num">Dénivelé (cm)</th>
+            <th class="num">Pente (%)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<script>
+/* Helper functions */
+const $ = s => document.querySelector(s);
+const fmt = x => (Math.abs(x)<1e-9?0:+x).toLocaleString("fr-FR",{maximumFractionDigits:2});
+const parseNum = v => v===""||v==null?NaN:parseFloat(String(v).replace(",", "."));
+const niceStep = d => {
+  const p=Math.pow(10,Math.floor(Math.log10(d||1)));
+  const m=d/p;
+  const s=m<=1?1:m<=2?2:m<=5?5:10;
+  return s*p;
+};
+
+/* Taille fiable du SVG */
+function setChartSize(){
+  const svg = $("#chart");
+  if(!svg) return;
+  const w = svg.clientWidth;
+  const isMobile = matchMedia('(max-width:768px)').matches;
+  const ratio = isMobile ? (3/4) : (9/21);
+  const minH = isMobile ? 260 : 380;
+  svg.style.height = Math.max(Math.round(w * ratio), minH) + 'px';
+}
+
+/* Profil */
+function buildProfile(L,H,n,h){
+  let total=0; for(let i=0;i<n;i++) total+=h;
+  const rLen=L/(n+1), rRise=(H-total)/(n+1);
+  const pts=[{x:0,y:0}];
+  for(let i=0;i<n+1;i++){
+    const a=pts[pts.length-1];
+    pts.push({x:a.x+rLen,y:a.y+rRise});
+    if(i<n){
+      const t=pts[pts.length-1];
+      pts.push({x:t.x,y:t.y+h,_h:h});
+    }
+  }
+  const segs=[];
+  for(let i=0;i<pts.length-1;i++){
+    const a=pts[i],b=pts[i+1];
+    const dx=b.x-a.x, dy=b.y-a.y;
+    segs.push({
+      i:i+1,
+      type:dx===0?"Marche":"Rampe",
+      len:dx,
+      rise:dy,
+      slope:dx===0?Infinity:(dy/dx*100)
+    });
+  }
+  return {pts,segs};
+}
+
+/* Graphe */
+function drawIso(profile){
+  const svg=$("#chart");
+  svg.innerHTML="";
+  const rect=svg.getBoundingClientRect();
+  const W=rect.width, Hpx=rect.height || 400;
+  svg.setAttribute("viewBox", `0 0 ${W} ${Hpx}`);
+  svg.setAttribute("preserveAspectRatio","xMinYMin meet");
+
+  const isMobile = matchMedia('(max-width:768px)').matches;
+  const padL=70, padR=28, padT=20, padB=50;
+
+  const maxX=Math.max(...profile.pts.map(p=>p.x))||1;
+  const maxY=Math.max(...profile.pts.map(p=>p.y))||1;
+  const nTicks = isMobile ? 6 : 10;
+
+  const domX = maxX * 1.03;
+  const domY = maxY * 1.05;
+  const pxPad = 6;
+
+  const availW = (W - padL - padR) - pxPad;
+  const availH = (Hpx - padT - padB) - pxPad;
+
+  const sx = availW / domX;
+  const sy = availH / domY;
+  const s  = Math.min(sx, sy);
+
+  const freeH = (Hpx - padT - padB) - domY*s - pxPad;
+  const x0 = padL + pxPad/2;
+  const y0 = Hpx - padB - freeH/2 - pxPad/2;
+
+  const x2px = x => x0 + x*s;
+  const y2px = y => y0 - y*s;
+
+  const g=document.createElementNS("http://www.w3.org/2000/svg","g");
+  g.setAttribute("class","axes");
+
+  const stepX=niceStep(maxX/nTicks), stepY=niceStep(maxY/nTicks);
+
+  for(let x=0;x<=maxX+1e-9;x+=stepX){
+    const X=x2px(x);
+    g.insertAdjacentHTML("beforeend",
+      `<g class="tick"><line x1="${X}" y1="${y2px(0)}" x2="${X}" y2="${y2px(maxY)}"/></g>`);
+    g.insertAdjacentHTML("beforeend",
+      `<text x="${X}" y="${y2px(0)+28}" text-anchor="middle">${x.toFixed(0)}</text>`);
+  }
+
+  for(let y=0;y<=maxY+1e-9;y+=stepY){
+    const Y=y2px(y);
+    g.insertAdjacentHTML("beforeend",
+      `<g class="tick"><line x1="${x2px(0)}" y1="${Y}" x2="${x2px(maxX)}" y2="${Y}"/></g>`);
+    g.insertAdjacentHTML("beforeend",
+      `<text x="${x2px(0)-8}" y="${Y+4}" text-anchor="end">${y.toFixed(0)}</text>`);
+  }
+
+  g.insertAdjacentHTML("beforeend",
+    `<text x="${(x2px(0)+x2px(maxX))/2}" y="${y2px(0)+44}" text-anchor="middle">Chaînage X (cm)</text>`);
+  g.insertAdjacentHTML("beforeend",
+    `<text transform="translate(${x2px(0)-42} ${(y2px(0)+y2px(maxY))/2}) rotate(-90)" text-anchor="middle">Altitude Y (cm)</text>`);
+
+  svg.appendChild(g);
+
+  const d=profile.pts.map((p,i)=>`${i?"L":"M"} ${x2px(p.x)} ${y2px(p.y)}`).join(" ");
+  const path=document.createElementNS("http://www.w3.org/2000/svg","path");
+  path.setAttribute("class","path");
+  path.setAttribute("d",d);
+  svg.appendChild(path);
+
+  profile.pts.forEach((p,i)=>{
+    const c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("class","dot");
+    c.setAttribute("r", isMobile ? "4.5" : "3.6");
+    c.setAttribute("cx",x2px(p.x));
+    c.setAttribute("cy",y2px(p.y));
+    svg.appendChild(c);
+
+    if(i>0){
+      const prev=profile.pts[i-1];
+      if(Math.abs(prev.x-p.x)<1e-9 && p.y>prev.y){
+        const mid=(prev.y+p.y)/2;
+        const tx=document.createElementNS("http://www.w3.org/2000/svg","text");
+        tx.setAttribute("class","label");
+        tx.setAttribute("x",x2px(p.x)+6);
+        tx.setAttribute("y",y2px(mid));
+        tx.textContent=`h = ${(p._h ?? (p.y-prev.y)).toLocaleString("fr-FR",{maximumFractionDigits:2})} cm`;
+        svg.appendChild(tx);
+      }
+    }
+  });
+}
+
+/* Tableau */
+function renderTable(segs){
+  const tb=$("#table tbody");
+  tb.innerHTML="";
+  for(const s of segs){
+    const slopeTxt = s.slope===Infinity ? "∞" :
+      (Math.round(s.slope*100)/100).toLocaleString("fr-FR",{maximumFractionDigits:2});
+    tb.insertAdjacentHTML("beforeend",
+      `<tr>
+        <td class="left">${s.i}</td>
+        <td class="left">${s.type}</td>
+        <td class="num">${fmt(s.len)}</td>
+        <td class="num">${fmt(s.rise)}</td>
+        <td class="num">${s.type==="Rampe"?slopeTxt:"∞"}</td>
+      </tr>`
+    );
+  }
+}
+
+function clearChartAndTable(msg){
+  $("#chart").innerHTML="";
+  $("#table tbody").innerHTML="";
+  $("#alert").innerHTML=`<div class="info">${msg}</div>`;
+}
+
+/* Update principal */
+function update(){
+  setChartSize();
+
+  const useSlope = $("#modeSlope").checked;
+  const adjustAll = $("#adjustAll").checked;
+
+  let L=parseNum($("#L").value),
+      H=parseNum($("#H").value),
+      h=parseNum($("#h").value),
+      n=parseInt($("#n").value,10),
+      pct=parseFloat($("#targetSlope").value),
+      eps=1e-9;
+
+  if(useSlope){
+    if(!Number.isFinite(L)||!Number.isFinite(H)||!Number.isFinite(h)||!Number.isFinite(pct)){
+      clearChartAndTable("Mode pente : renseigne L, H, h (cm) et la pente cible (%).");
+      $("#adjustAll").disabled=true;
+      $("#adjustHint").style.opacity=".6";
+      $("#n").disabled=true;
+      $("#h").disabled=false;
+      $("#targetSlope").disabled=false;
+      return;
+    }
+  }else{
+    const baseMissing = !Number.isFinite(L)||!Number.isFinite(H)||!Number.isInteger(n);
+    const needH = !adjustAll;
+    const hMissing = needH && !Number.isFinite(h);
+    if(baseMissing || hMissing){
+      clearChartAndTable("Mode manuel : renseigne L, H, n et h (cm) si « Ajuster les marches » n'est pas coché.");
+      $("#adjustAll").disabled = !(Number.isFinite(L)&&Number.isFinite(H)&&Number.isInteger(n)&&n>0);
+      $("#adjustHint").style.opacity = $("#adjustAll").disabled?".6":"1";
+      $("#n").disabled=false;
+      $("#h").disabled=false;
+      $("#targetSlope").disabled=true;
+      return;
+    }
+  }
+
+  if(L<=0 || (!adjustAll && h<=0) || n<0){
+    clearChartAndTable("Paramètres invalides (L>0, h>0 si utilisé, n≥0).");
+    return;
+  }
+
+  if(useSlope){
+    const nCalc = Math.max(0, Math.round((H - (pct/100)*L) / h));
+    n = nCalc;
+    $("#n").value = String(n);
+
+    const zeroTarget = Math.abs(pct)<eps && n>0;
+    $("#adjustAll").disabled=!zeroTarget;
+    $("#adjustHint").style.opacity = zeroTarget?"1":".6";
+
+    if(zeroTarget && adjustAll){
+      h = H/n;
+      $("#h").value = h.toLocaleString("fr-FR",{maximumFractionDigits:2});
+      $("#alert").innerHTML =
+        `<div class="info">Pente 0 % exacte — marches ajustées : h = H/n ≈ ${fmt(h)} cm (n = ${n}).</div>`;
+    }else{
+      const slope = (H - n*h)/L*100;
+      $("#alert").innerHTML =
+        `<div class="info">Mode pente — cible ${pct.toFixed(2)} % : n calculé = ${n}, pente actuelle ≈ ${slope.toFixed(2)} %.</div>`;
+    }
+  }else{
+    $("#adjustAll").disabled = !(Number.isFinite(L)&&Number.isFinite(H)&&Number.isInteger(n)&&n>0);
+    $("#adjustHint").style.opacity = $("#adjustAll").disabled?".6":"1";
+
+    if(adjustAll && n>0){
+      h = H / n;
+      $("#h").value = h.toLocaleString("fr-FR",{maximumFractionDigits:2});
+      $("#alert").innerHTML =
+        `<div class="info">Mode manuel — marches ajustées : h = H/n ≈ ${fmt(h)} cm (pente 0 % exacte).</div>`;
+    }else{
+      const slope = (H - n*h)/L*100;
+      $("#alert").innerHTML =
+        `<div class="info">Mode manuel — pente actuelle ≈ ${slope.toFixed(2)} %.</div>`;
+    }
+  }
+
+  const prof=buildProfile(L,H,n,h);
+  drawIso(prof);
+  renderTable(prof.segs);
+
+  $("#n").disabled = useSlope;
+  $("#h").disabled =
+    (useSlope && Math.abs(pct||0)<1e-9 && adjustAll) ||
+    (!useSlope && adjustAll);
+  $("#targetSlope").disabled = !useSlope;
+}
+
+/* Events */
+["L","H","h","targetSlope","n","adjustAll"].forEach(id=>{
+  document.addEventListener("input", e=>{ if(e.target && e.target.id===id) update(); });
+  document.addEventListener("change", e=>{ if(e.target && e.target.id===id) update(); });
+});
+["modeSlope"].forEach(id=>{
+  document.addEventListener("change", e=>{ if(e.target && e.target.id===id) update(); });
+  document.addEventListener("input",  e=>{ if(e.target && e.target.id===id) update(); });
+});
+
+$("#reset").addEventListener("click", ()=>{
+  $("#modeSlope").checked=false;
+  $("#adjustAll").checked=false;
+  $("#L").value="";
+  $("#H").value="";
+  $("#h").value="";
+  $("#targetSlope").value="";
+  $("#n").value="";
+  update();
+});
+
+$("#printBtn").addEventListener("click", ()=>{
+  update();
+  setTimeout(()=>window.print(),10);
+});
+
+addEventListener("resize", update);
+addEventListener("orientationchange", update);
+
+/* Init */
+setChartSize();
+requestAnimationFrame(()=>{ setChartSize(); update(); });
+</script>
+</body>
+</html>
