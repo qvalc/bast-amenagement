@@ -11,6 +11,210 @@
     content="Retrouvez les calculateurs Bast Aménagement : matériaux, charges admissibles et poids des matériaux." />
 
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .calc-app-page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .calc-app-hero h1 {
+      margin: 8px 0 14px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.05;
+    }
+
+    .calc-app {
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+      margin: 34px 0 56px;
+    }
+
+    .calc-sidebar,
+    .calc-viewer {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(25, 35, 28, 0.12);
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+    }
+
+    .calc-sidebar {
+      position: sticky;
+      top: 18px;
+      padding: 18px;
+    }
+
+    .calc-search-box {
+      margin-bottom: 18px;
+    }
+
+    .calc-search-box label,
+    .calc-viewer-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.72;
+    }
+
+    .calc-search-box input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(25, 35, 28, 0.18);
+      border-radius: 14px;
+      font: inherit;
+      background: #fff;
+      outline: none;
+    }
+
+    .calc-search-box input:focus {
+      border-color: rgba(25, 95, 55, 0.55);
+      box-shadow: 0 0 0 4px rgba(25, 95, 55, 0.10);
+    }
+
+    .calc-menu-group+.calc-menu-group {
+      margin-top: 12px;
+    }
+
+    .calc-menu-title {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 13px 14px;
+      border: 0;
+      border-radius: 14px;
+      background: rgba(32, 82, 48, 0.10);
+      color: #18311f;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .calc-menu-title::after {
+      content: "+";
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    .calc-menu-group.is-open .calc-menu-title::after {
+      content: "−";
+    }
+
+    .calc-menu-items {
+      display: none;
+      padding: 10px 0 2px;
+    }
+
+    .calc-menu-group.is-open .calc-menu-items {
+      display: grid;
+      gap: 7px;
+    }
+
+    .calc-link {
+      width: 100%;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 12px;
+      background: transparent;
+      color: #26352b;
+      font: inherit;
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .calc-link:hover {
+      background: rgba(32, 82, 48, 0.08);
+      transform: translateX(3px);
+    }
+
+    .calc-link.is-active {
+      background: #205230;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .calc-link.is-hidden {
+      display: none;
+    }
+
+    .calc-viewer {
+      overflow: hidden;
+      min-height: 760px;
+    }
+
+    .calc-viewer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 22px;
+      border-bottom: 1px solid rgba(25, 35, 28, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    .calc-viewer-header h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 2.5vw, 2rem);
+    }
+
+    .calc-viewer-header a {
+      flex: 0 0 auto;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(32, 82, 48, 0.10);
+      color: #18311f;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .calc-viewer-header a:hover {
+      background: #205230;
+      color: #fff;
+    }
+
+    #calcFrame {
+      width: 100%;
+      min-height: 720px;
+      border: 0;
+      display: block;
+      background: #fff;
+    }
+
+    @media (max-width: 900px) {
+      .calc-app {
+        grid-template-columns: 1fr;
+      }
+
+      .calc-sidebar {
+        position: static;
+      }
+
+      .calc-viewer-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .calc-viewer-header a {
+        width: 100%;
+        text-align: center;
+      }
+
+      #calcFrame {
+        min-height: 780px;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -49,15 +253,10 @@
 
   </header>
 
-  <main class="calc-page">
+  <main class="calc-page calc-app-page">
 
-    <section class="calc-hero">
+    <section class="calc-hero calc-app-hero">
       <p class="tagline">Outils pratiques</p>
-
-      <p class="calc-intro">
-        Parce qu'un projet bien préparé est un projet réussi, Bast Aménagement met gratuitement à votre disposition
-        une série d'outils pratiques pour vos travaux.
-      </p>
 
       <p class="calc-disclaimer">
         Tous les calculateurs sont mis gratuitement à votre disposition. Les résultats fournis sont donnés à titre
@@ -67,57 +266,112 @@
       </p>
     </section>
 
-    <section class="calc-dropdowns">
+    <section class="calc-app" aria-label="Interface des calculateurs">
 
-      <div class="calc-dropdown">
-        <button type="button">Matériaux</button>
+      <aside class="calc-sidebar" aria-label="Menu des calculateurs">
 
-        <div class="calc-dropdown-menu">
-          <a target="_blank" href="calculateurs/blocs.html">Blocs</a>
-          <a target="_blank" href="calculateurs/blocs-cellulaires.html">Blocs cellulaires</a>
-          <a target="_blank" href="calculateurs/brique.html">Briques</a>
-          <a target="_blank" href="calculateurs/carrelage.html">Carrelage</a>
-          <a target="_blank" href="calculateurs/chape.html">Chape</a>
-          <a target="_blank" href="calculateurs/cloisons.html">Cloisons</a>
-          <a target="_blank" href="calculateurs/cubage-beton.html">Cubage béton</a>
-          <a target="_blank" href="calculateurs/egaline.html">Égaline</a>
-          <a target="_blank" href="calculateurs/escalier.html">Escalier</a>
-          <a target="_blank" href="calculateurs/facade-cimentee.html">Façade cimentée</a>
-          <a target="_blank" href="calculateurs/facade-isolante.html">Façade isolante</a>
-          <a target="_blank" href="calculateurs/hourdis.html">Hourdis</a>
-          <a target="_blank" href="calculateurs/isolant.html">Isolant</a>
-          <a target="_blank" href="calculateurs/mortex.html">Mortex</a>
-          <a target="_blank" href="calculateurs/plots.html">Plots</a>
-          <a target="_blank" href="calculateurs/stepocs.html">Stepocs</a>
-          <a target="_blank" href="calculateurs/tapis-de-pierre.html">Tapis de pierre</a>
+        <div class="calc-search-box">
+          <label for="calcSearch">Rechercher un calculateur</label>
+          <input type="search" id="calcSearch" placeholder="Ex. béton, chape, blocs..." autocomplete="off">
         </div>
-      </div>
 
-      <div class="calc-dropdown">
-        <button type="button">Charges admissibles</button>
+        <div class="calc-menu-group">
+          <button type="button" class="calc-menu-title" aria-expanded="true">
+            Matériaux
+          </button>
 
-        <div class="calc-dropdown-menu">
-          <a target="_blank" href="calculateurs/charges-admissibles/ch-ad-heb.html">HEB</a>
-          <a target="_blank" href="calculateurs/charges-admissibles/ch-ad-hourdis.html">Hourdis</a>
-          <a target="_blank" href="calculateurs/charges-admissibles/ch-ad-linteaux.html">Linteaux</a>
-          <a target="_blank" href="calculateurs/charges-admissibles/ch-ad-plancher-bois.html">Plancher bois</a>
-          <a target="_blank" href="calculateurs/charges-admissibles/ch-ad-poutrains-entrevous.html">Poutrains
-            entrevous</a>
-          <a target="_blank" href="calculateurs/charges-admissibles/ch-ad-pre-linteaux.html">Pré-linteaux</a>
+          <div class="calc-menu-items">
+            <button type="button" class="calc-link" data-title="Blocs" data-src="calculateurs/blocs.html">Blocs</button>
+            <button type="button" class="calc-link" data-title="Blocs cellulaires"
+              data-src="calculateurs/blocs-cellulaires.html">Blocs cellulaires</button>
+            <button type="button" class="calc-link" data-title="Briques"
+              data-src="calculateurs/brique.html">Briques</button>
+            <button type="button" class="calc-link" data-title="Carrelage"
+              data-src="calculateurs/carrelage.html">Carrelage</button>
+            <button type="button" class="calc-link" data-title="Chape" data-src="calculateurs/chape.html">Chape</button>
+            <button type="button" class="calc-link" data-title="Cloisons"
+              data-src="calculateurs/cloisons.html">Cloisons</button>
+            <button type="button" class="calc-link" data-title="Cubage béton"
+              data-src="calculateurs/cubage-beton.html">Cubage béton</button>
+            <button type="button" class="calc-link" data-title="Égaline"
+              data-src="calculateurs/egaline.html">Égaline</button>
+            <button type="button" class="calc-link" data-title="Escalier"
+              data-src="calculateurs/escalier.html">Escalier</button>
+            <button type="button" class="calc-link" data-title="Façade cimentée"
+              data-src="calculateurs/facade-cimentee.html">Façade cimentée</button>
+            <button type="button" class="calc-link" data-title="Façade isolante"
+              data-src="calculateurs/facade-isolante.html">Façade isolante</button>
+            <button type="button" class="calc-link" data-title="Hourdis"
+              data-src="calculateurs/hourdis.html">Hourdis</button>
+            <button type="button" class="calc-link" data-title="Isolant"
+              data-src="calculateurs/isolant.html">Isolant</button>
+            <button type="button" class="calc-link" data-title="Mortex"
+              data-src="calculateurs/mortex.html">Mortex</button>
+            <button type="button" class="calc-link" data-title="Plots" data-src="calculateurs/plots.html">Plots</button>
+            <button type="button" class="calc-link" data-title="Stepocs"
+              data-src="calculateurs/stepocs.html">Stepocs</button>
+            <button type="button" class="calc-link" data-title="Tapis de pierre"
+              data-src="calculateurs/tapis-de-pierre.html">Tapis de pierre</button>
+          </div>
         </div>
-      </div>
 
-      <div class="calc-dropdown">
-        <button type="button">Poids des matériaux</button>
+        <div class="calc-menu-group">
+          <button type="button" class="calc-menu-title" aria-expanded="false">
+            Charges admissibles
+          </button>
 
-        <div class="calc-dropdown-menu">
-          <a target="_blank" href="calculateurs/poids/poids-agreats.html">Agréats</a>
-          <a target="_blank" href="calculateurs/poids/poids-blocs.html">Blocs</a>
-          <a target="_blank" href="calculateurs/poids/poids-bordures-beton.html">Bordures béton</a>
-          <a target="_blank" href="calculateurs/poids/poids-linteaux-pre-linteaux.html">Linteaux / Pré-linteaux</a>
-          <a target="_blank" href="calculateurs/poids/poids-plaques.html">Plaques</a>
+          <div class="calc-menu-items">
+            <button type="button" class="calc-link" data-title="HEB"
+              data-src="calculateurs/charges-admissibles/ch-ad-heb.html">HEB</button>
+            <button type="button" class="calc-link" data-title="Hourdis"
+              data-src="calculateurs/charges-admissibles/ch-ad-hourdis.html">Hourdis</button>
+            <button type="button" class="calc-link" data-title="Linteaux"
+              data-src="calculateurs/charges-admissibles/ch-ad-linteaux.html">Linteaux</button>
+            <button type="button" class="calc-link" data-title="Plancher bois"
+              data-src="calculateurs/charges-admissibles/ch-ad-plancher-bois.html">Plancher bois</button>
+            <button type="button" class="calc-link" data-title="Poutrains entrevous"
+              data-src="calculateurs/charges-admissibles/ch-ad-poutrains-entrevous.html">Poutrains entrevous</button>
+            <button type="button" class="calc-link" data-title="Pré-linteaux"
+              data-src="calculateurs/charges-admissibles/ch-ad-pre-linteaux.html">Pré-linteaux</button>
+          </div>
         </div>
-      </div>
+
+        <div class="calc-menu-group">
+          <button type="button" class="calc-menu-title" aria-expanded="false">
+            Poids des matériaux
+          </button>
+
+          <div class="calc-menu-items">
+            <button type="button" class="calc-link" data-title="Agréats"
+              data-src="calculateurs/poids/poids-agreats.html">Agréats</button>
+            <button type="button" class="calc-link" data-title="Blocs"
+              data-src="calculateurs/poids/poids-blocs.html">Blocs</button>
+            <button type="button" class="calc-link" data-title="Bordures béton"
+              data-src="calculateurs/poids/poids-bordures-beton.html">Bordures béton</button>
+            <button type="button" class="calc-link" data-title="Linteaux / Pré-linteaux"
+              data-src="calculateurs/poids/poids-linteaux-pre-linteaux.html">Linteaux / Pré-linteaux</button>
+            <button type="button" class="calc-link" data-title="Plaques"
+              data-src="calculateurs/poids/poids-plaques.html">Plaques</button>
+          </div>
+        </div>
+
+      </aside>
+
+      <section class="calc-viewer" aria-live="polite">
+        <div class="calc-viewer-header">
+          <div>
+            <span class="calc-viewer-label">Calculateur sélectionné</span>
+            <h2 id="calcViewerTitle">Sélectionnez un calculateur</h2>
+          </div>
+
+          <a id="calcOpenNewTab" href="#" target="_blank" rel="noopener noreferrer">
+            Ouvrir dans un nouvel onglet
+          </a>
+        </div>
+
+        <iframe id="calcFrame" title="Calculateur Bast Aménagement" src="about:blank" loading="lazy">
+        </iframe>
+      </section>
 
     </section>
 
@@ -144,6 +398,65 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuTitles = document.querySelectorAll(".calc-menu-title");
+      const calcLinks = document.querySelectorAll(".calc-link");
+      const calcFrame = document.getElementById("calcFrame");
+      const calcViewerTitle = document.getElementById("calcViewerTitle");
+      const calcOpenNewTab = document.getElementById("calcOpenNewTab");
+      const calcSearch = document.getElementById("calcSearch");
+
+      menuTitles.forEach((title) => {
+        title.addEventListener("click", () => {
+          const group = title.closest(".calc-menu-group");
+          const isOpen = group.classList.toggle("is-open");
+          title.setAttribute("aria-expanded", String(isOpen));
+        });
+      });
+
+      calcLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          const title = link.dataset.title;
+          const src = link.dataset.src;
+
+          calcLinks.forEach((item) => item.classList.remove("is-active"));
+          link.classList.add("is-active");
+
+          calcViewerTitle.textContent = title;
+          calcFrame.src = src;
+          calcOpenNewTab.href = src;
+
+          document.querySelector(".calc-viewer").scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      });
+
+      calcSearch.addEventListener("input", () => {
+        const value = calcSearch.value.trim().toLowerCase();
+
+        calcLinks.forEach((link) => {
+          const label = link.textContent.trim().toLowerCase();
+          link.classList.toggle("is-hidden", value && !label.includes(value));
+        });
+
+        document.querySelectorAll(".calc-menu-group").forEach((group) => {
+          const visibleLinks = group.querySelectorAll(".calc-link:not(.is-hidden)");
+          const hasVisibleLinks = visibleLinks.length > 0;
+
+          group.style.display = hasVisibleLinks ? "" : "none";
+
+          if (value && hasVisibleLinks) {
+            group.classList.add("is-open");
+            group.querySelector(".calc-menu-title").setAttribute("aria-expanded", "true");
+          }
+        });
+      });
+    });
+  </script>
+
 </body>
 
 </html>
