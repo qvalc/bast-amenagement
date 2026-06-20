@@ -392,13 +392,27 @@ a {
   padding: 45px 7%;
   background: #111;
   color: white;
-  display: flex;
-  justify-content: space-between;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px 60px;
+  align-items: start;
 }
 
 .footer p {
   color: #bbb;
+}
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  width: 100%;
+  text-align: center;
+  margin-top: 15px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, .15);
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  flex-wrap: wrap;
 }
 
 @media (max-width: 900px) {
@@ -449,10 +463,6 @@ a {
   .projects,
   .about {
     grid-template-columns: 1fr;
-  }
-
-  .footer {
-    flex-direction: column;
   }
 }
 
