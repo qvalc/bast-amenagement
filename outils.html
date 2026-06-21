@@ -6,10 +6,243 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Outils | Bast Aménagement</title>
+
   <meta name="description"
-    content="Découvrez les outils Bast Aménagement : calculateurs gratuits pour vos travaux et BastCompta, logiciel de comptabilité simplifiée." />
+    content="Découvrez les outils gratuits Bast Aménagement : BastPlan, calculateurs de matériaux et BastCompta." />
 
   <link rel="stylesheet" href="style.css" />
+
+  <style>
+    .tools-page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 46px 0 72px;
+    }
+
+    .tools-hero {
+      max-width: 880px;
+      margin: 0 auto 34px;
+      text-align: center;
+    }
+
+    .tools-hero h1 {
+      margin: 8px 0 12px;
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      line-height: 1.05;
+      color: #14241a;
+    }
+
+    .tools-hero p {
+      margin: 0 auto;
+      max-width: 760px;
+      color: rgba(20, 32, 24, 0.76);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 26px;
+      align-items: stretch;
+    }
+
+    .tool-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 42% 1fr;
+      min-height: 280px;
+      overflow: hidden;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(94, 140, 60, 0.14), transparent 34%),
+        linear-gradient(135deg, rgba(9, 67, 42, 0.055), rgba(255, 255, 255, 0.96));
+      border: 1px solid rgba(25, 35, 28, 0.12);
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.08);
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 58px rgba(0, 0, 0, 0.12);
+      border-color: rgba(32, 82, 48, 0.28);
+    }
+
+    .tool-card.featured {
+      grid-column: 1 / -1;
+    }
+
+    .tool-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background:
+        linear-gradient(135deg, rgba(245, 248, 244, 0.95), rgba(232, 239, 231, 0.82));
+    }
+
+    .tool-card.featured .tool-visual {
+      padding: 20px 28px;
+    }
+
+    .tool-logo {
+      display: block;
+      width: 100%;
+      max-width: 250px;
+      max-height: 170px;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.14));
+    }
+
+    .tool-card:not(.featured) .tool-logo {
+      max-width: 250px;
+      max-height: 170px;
+    }
+
+    .tool-icon {
+      width: min(190px, 62%);
+      aspect-ratio: 1 / 1;
+      height: auto;
+      display: grid;
+      place-items: center;
+      border-radius: 32px;
+      background: linear-gradient(135deg, #0c3f29, #6c9841);
+      color: #fff;
+      font-size: clamp(4rem, 8vw, 6rem);
+      font-weight: 900;
+      box-shadow: 0 18px 36px rgba(32, 82, 48, 0.30);
+    }
+
+    .tool-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .tool-kicker {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 12px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(32, 82, 48, 0.10);
+      color: #205230;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .tool-content h2 {
+      margin: 0 0 12px;
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+      line-height: 1.05;
+      color: #122217;
+    }
+
+    .tool-card:not(.featured) .tool-content h2 {
+      font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+    }
+
+    .tool-content p {
+      margin: 0;
+      color: rgba(20, 32, 24, 0.76);
+      line-height: 1.65;
+      font-size: 1rem;
+    }
+
+    .tool-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 20px 0 24px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .tool-points li {
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(32, 82, 48, 0.08);
+      color: #18311f;
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .tool-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-width: 168px;
+      margin-top: auto;
+      padding: 13px 18px;
+      border-radius: 999px;
+      background: #10291c;
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 12px 24px rgba(16, 41, 28, 0.18);
+    }
+
+    .tool-button::after {
+      content: "→";
+      margin-left: 10px;
+    }
+
+    .tool-card:hover .tool-button {
+      background: #205230;
+    }
+
+    @media (max-width: 950px) {
+      .tools-grid,
+      .tool-card,
+      .tool-card.featured {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-card.featured {
+        grid-column: auto;
+      }
+
+      .tool-visual {
+        min-height: 220px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .tools-page {
+        width: min(100% - 24px, 1180px);
+        padding-top: 30px;
+      }
+
+      .tool-card,
+      .tool-card.featured {
+        min-height: auto;
+        border-radius: 24px;
+      }
+
+      .tool-visual,
+      .tool-card.featured .tool-visual {
+        padding: 24px;
+      }
+
+      .tool-logo {
+        max-height: 190px;
+      }
+
+      .tool-content {
+        padding: 26px;
+      }
+
+      .tool-button {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -27,11 +260,12 @@
 
     <div class="social-links">
       <a href="https://www.facebook.com/BastAmenagement/" class="facebook-link" target="_blank"
-        rel="noopener noreferrer">
+        rel="noopener noreferrer" aria-label="Facebook Bast Aménagement">
         <img src="facebook.png" alt="Facebook">
       </a>
 
-      <a href="https://share.google/cdL3JU2dKxnzY11mH" class="google-link" target="_blank" rel="noopener noreferrer">
+      <a href="https://share.google/cdL3JU2dKxnzY11mH" class="google-link" target="_blank" rel="noopener noreferrer"
+        aria-label="Google Bast Aménagement">
         <img src="google.png" alt="Google">
       </a>
     </div>
@@ -44,65 +278,74 @@
       <a href="index.html#accueil">Accueil</a>
       <a href="index.html#prestations">Prestations</a>
       <a href="index.html#realisations">Réalisations</a>
-      <a href="outils.html">Outils</a>
       <a href="blog.html">Blog</a>
+      <a href="outils.html">Outils</a>
       <a href="contact.html">Contact / Devis</a>
     </nav>
 
   </header>
 
+  
+
   <main class="tools-page">
-
     <section class="tools-hero">
-      <p class="tagline">Nos outils</p>
-
-
-      <p>
-
-      </p>
+      <p class="tagline">Outils pratiques</p>
+      <h1>Nos outils</h1>
+      <p>Des outils simples pour préparer vos projets, calculer vos besoins en matériaux et gérer plus facilement vos estimations.</p>
     </section>
 
-    <section class="tools-grid">
+    <section class="tools-grid" aria-label="Outils Bast Aménagement">
+      <a class="tool-card featured" href="https://qvalc.github.io/BastPlan/" target="_blank" rel="noopener noreferrer">
+        <div class="tool-visual">
+          <img class="tool-logo" src="logo-bastplan.png" alt="Logo BastPlan">
+        </div>
+        <div class="tool-content">
+          <span class="tool-kicker">Planification extérieure</span>
+          <h2>BastPlan</h2>
+          <p>Créez et visualisez vos plans extérieurs : pelouses, allées, terrasses, plantations, bordures et aménagements paysagers.</p>
+          <ul class="tool-points">
+            <li>Plans extérieurs</li>
+            <li>Visualisation</li>
+            <li>Surfaces</li>
+          </ul>
+          <span class="tool-button">Découvrir BastPlan</span>
+        </div>
+      </a>
 
-      <article class="tool-card">
-        <h2>BastPlan</h2>
+      <a class="tool-card" href="calculateurs.html">
+        <div class="tool-visual">
+          <div class="tool-icon" aria-hidden="true">Σ</div>
+        </div>
+        <div class="tool-content">
+          <span class="tool-kicker">Calculs matériaux</span>
+          <h2>Calculateurs</h2>
+          <p>Estimez rapidement les quantités de matériaux, les volumes, les surfaces, les poids et certaines charges admissibles.</p>
+          <ul class="tool-points">
+            <li>Matériaux</li>
+            <li>Poids</li>
+            <li>Charges</li>
+          </ul>
+          <span class="tool-button">Ouvrir les calculateurs</span>
+        </div>
+      </a>
 
-        <p>
-          Réalisez facilement vos plans extérieurs : pelouses, allées,
-          terrasses, plantations, bordures et aménagements paysagers.
-          Visualisez votre projet directement sur plan et estimez les surfaces.
-        </p>
-
-        <a href="https://qvalc.github.io/BastPlan/" class="btn secondary" target="_blank" rel="noopener noreferrer">
-          Découvrir BastPlan
-        </a>
-      </article>
-
-      <article class="tool-card">
-        <h2>Calculateurs</h2>
-        <p>
-          Des calculateurs gratuits pour estimer les quantités de matériaux,
-          les volumes, les surfaces, les poids ou encore certaines charges admissibles.
-        </p>
-
-        <a href="calculateurs.html" class="btn secondary">Accéder aux calculateurs</a>
-      </article>
-
-      <article class="tool-card">
-        <h2>BastCompta</h2>
-        <p>
-          Un outil de comptabilité simplifiée pensé pour les indépendants et petites activités :
-          devis, factures, suivi TVA, achats, ventes et aperçu financier.
-        </p>
-
-        <a href="https://bastcompta.bast-amenagement.com/" class="btn secondary" target="_blank"
-          rel="noopener noreferrer">
-          Découvrir BastCompta
-        </a>
-      </article>
-
+      <a class="tool-card" href="https://qvalc.github.io/BastCompta/" target="_blank" rel="noopener noreferrer">
+        <div class="tool-visual">
+          <img class="tool-logo" src="logo-bastcompta.png" alt="Logo BastCompta">
+        </div>
+        <div class="tool-content">
+          <span class="tool-kicker">Gestion simplifiée</span>
+          <h2>BastCompta</h2>
+          <p>Un outil de comptabilité simplifiée pensé pour les indépendants et petites activités : devis, factures, achats, ventes et aperçu financier.</p>
+          <ul class="tool-points">
+            <li>Devis</li>
+            <li>Factures</li>
+            <li>Suivi TVA</li>
+          </ul>
+          <span class="tool-button">Découvrir BastCompta</span>
+        </div>
+      </a>
     </section>
-
   </main>
 
   <footer class="footer" id="contact">
@@ -125,7 +368,9 @@
 
   </footer>
 
-  <script src="script.js"></script>
-</body>
+  
 
+  <script src="script.js"></script>
+
+</body>
 </html>
