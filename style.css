@@ -1191,3 +1191,85 @@ a {
 .footer-bottom a:hover {
   color: white;
 }
+
+@media (max-width: 900px) {
+  .header {
+    padding: 0 18px;
+  }
+
+  .social-links {
+    position: static;
+    margin-left: auto;
+    margin-right: 10px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .facebook-link img,
+  .google-link img {
+    width: 22px;
+    height: 22px;
+  }
+
+  .brand-text strong {
+    font-size: 16px;
+  }
+
+  .brand-text small {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+  }
+}
+
+@media (max-width: 700px) {
+  .contact-page {
+    padding: 105px 18px 55px;
+  }
+
+  .contact-hero {
+    margin-bottom: 35px;
+  }
+
+  .contact-hero h1 {
+    font-size: 36px;
+  }
+
+  .contact-hero p:not(.tagline) {
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .contact-info-box,
+  .contact-form-box {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+
+  .contact-profile {
+    gap: 14px;
+  }
+
+  .contact-profile img {
+    width: 72px;
+    height: 72px;
+  }
+
+  .contact-profile h2 {
+    font-size: 23px;
+  }
+
+  .contact-form-box h2 {
+    font-size: 26px;
+  }
+
+  .contact-form input,
+  .contact-form select,
+  .contact-form textarea {
+    padding: 13px 14px;
+    font-size: 15px;
+  }
+
+  .contact-form textarea {
+    min-height: 130px;
+  }
+}
