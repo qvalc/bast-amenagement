@@ -5,6 +5,12 @@ menuBtn.addEventListener("click", () => {
   nav.classList.toggle("active");
 });
 
+document.querySelectorAll("#nav a").forEach((link) => {
+  link.addEventListener("click", () => {
+    nav.classList.remove("active");
+  });
+});
+
 document.querySelectorAll(".project-card").forEach((card) => {
   const mainImage = card.querySelector(".project-card > img");
   const thumbs = card.querySelectorAll(".project-thumbs img");
