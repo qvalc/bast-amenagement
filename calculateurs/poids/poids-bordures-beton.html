@@ -1,130 +1,98 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Charge admissible Poutrelles HEB</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-            flex-direction: column;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poids des bordures Béton</title>
+  <style>
+    :root{
+      --anth:#2b2f33;     /* gris anthracite pour les titres */
+      --line:#e5e7eb;
+      --muted:#6b7280;
+    }
 
-        label,
-        select,
-        input {
-            margin-bottom: 10px;
-            display: block;
-        }
-    </style>
+    body{
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      margin:0;padding:0;background:transparent;color:#333;text-align:center;
+    }
+
+    h1{font-size:18px;margin:10px 0 15px;color:var(--anth);font-weight:600}
+
+    .table-container{display:flex;flex-direction:column;align-items:center;max-width:650px;width:100%;margin:5px auto 10px;background:transparent}
+
+    .input-container{margin-bottom:10px}
+    label{font-size:13px;color:var(--muted);margin-right:6px}
+
+    input, select{
+      padding:6px;border:1px solid var(--line);border-radius:6px;font-size:14px;text-align:center;background:#fff;color:#333
+    }
+    input{width:90px}
+
+    table{
+      border-collapse:collapse;width:90%;margin:auto;background:transparent;border:1px solid var(--line);font-size:14px;color:#333
+    }
+    th, td{padding:10px;border:1px solid var(--line);text-align:center}
+
+    /* ✅ En-têtes transparents + texte anthracite */
+    th{
+      background:transparent;   /* fond d’en-tête transparent */
+      color:var(--anth);        /* texte anthracite */
+      font-weight:600;
+    }
+
+    td span{white-space:nowrap}
+
+    @media (max-width:480px){
+      table{font-size:12px;border:none}
+      thead{display:none}
+      tbody, tr, td{display:block;width:100%;background:transparent}
+      tr{margin-bottom:10px;border-bottom:1px solid var(--line)}
+      td{text-align:left;padding:6px 0;border:none}
+      td::before{content:attr(data-label);display:block;font-weight:600;color:var(--anth);margin-bottom:3px}
+    }
+  </style>
 </head>
-
 <body>
-    <h2>Charge admissible Poutrelles HEB</h2>
+  <h1>Poids des dordures Béton</h1>
 
-    <label for="portee">Portée entre appuis (m) :</label>
-    <input type="number" id="portee" step="0.1" oninput="calculerHEB()">
+  <div class="table-container">
+    <div class="input-container">
+      <label for="border-quantity">Quantité :</label>
+      <input type="number" id="border-quantity" value="1" min="1" step="1" oninput="calculateBorders()">
+    </div>
 
-    <label for="type_heb">Type de poutrelle HEB :</label>
-    <select id="type_heb" onchange="calculerHEB()">
-        <option value="HEB100">HEB 100</option>
-        <option value="HEB120">HEB 120</option>
-        <option value="HEB140">HEB 140</option>
-        <option value="HEB160">HEB 160</option>
-        <option value="HEB180">HEB 180</option>
-        <option value="HEB200">HEB 200</option>
-        <option value="HEB220">HEB 220</option>
-        <option value="HEB240">HEB 240</option>
-        <option value="HEB260">HEB 260</option>
-        <option value="HEB280">HEB 280</option>
-        <option value="HEB300">HEB 300</option>
-        <option value="HEB320">HEB 320</option>
-        <option value="HEB340">HEB 340</option>
-        <option value="HEB360">HEB 360</option>
-        <option value="HEB400">HEB 400</option>
-        <option value="HEB450">HEB 450</option>
-        <option value="HEB500">HEB 500</option>
-        <option value="HEB550">HEB 550</option>
-        <option value="HEB600">HEB 600</option>
-        <option value="HEB650">HEB 650</option>
-        <option value="HEB700">HEB 700</option>
-        <option value="HEB800">HEB 800</option>
-        <option value="HEB900">HEB 900</option>
-        <option value="HEB1000">HEB 1000</option>
-    </select>
+    <table>
+      <thead>
+        <tr><th colspan="4">Bordures Béton</th></tr>
+        <tr><th>Dénomination</th><th>Taille</th><th>Poids</th><th>Résultat</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Dénomination">Bordures béton</td>
+          <td data-label="Taille">
+            <select id="border-select" onchange="calculateBorders()">
+              <option value="29">100x20x6</option>
+              <option value="43">100x30x6</option>
+              <option value="54">100x40x6</option>
+              <option value="48">100x20x10</option>
+              <option value="70">100x30x10</option>
+            </select>
+          </td>
+          <td data-label="Poids"><span id="border-weight">29 kg</span></td>
+          <td data-label="Résultat"><span id="border-result">29 kg</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-    <h3>Résultat :</h3>
-    <p id="charge_admissible"></p>
-
-    <script>
-        const abaque_heb = {
-            "HEB100": { "2": 4279, "2.5": 3405, "3": 2818, "3.5": 2394, "4": 2078 },
-            "HEB120": { "2": 6858, "2.5": 5462, "3": 4528, "3.5": 3851, "4": 3349 },
-            "HEB140": { "2": 10300, "2.5": 8209, "3": 6810, "3.5": 5800, "4": 5049 },
-            "HEB160": { "2": 14842, "2.5": 11835, "3": 9824, "3.5": 8372, "4": 7293 },
-            "HEB180": { "2": 20345, "2.5": 16230, "3": 13478, "3.5": 11492, "4": 10024 },
-            "HEB200": { "2": 27237, "2.5": 21734, "3": 18056, "3.5": 15403, "4": 13434, "5": 10637 },
-            "HEB220": { "2": 35185, "2.5": 28083, "3": 23337, "3.5": 19915, "4": 17378, "5": 13773 },
-            "HEB240": { "2": 44857, "2.5": 35811, "3": 29766, "3.5": 25409, "4": 22179, "5": 17593 },
-            "HEB260": { "2": 43927, "2.5": 36521, "3": 31184, "3.5": 27228, "4": 21615, "5": 17842 },
-            "HEB280": { "2": 52734, "2.5": 43851, "3": 37451, "3.5": 32708, "4": 25981, "5": 21462 },
-            "HEB300": { "2.5": 53409, "3": 45622, "3.5": 39852, "4": 31671, "5": 26178 },
-            "HEB320": { "2.5": 61379, "3": 52437, "3.5": 45812, "4": 36421, "5": 30118 },
-            "HEB340": { "2.5": 68718, "3": 58715, "3.5": 51304, "4": 40802, "5": 33756 },
-            "HEB360": { "2.5": 76374, "3": 65263, "3.5": 57032, "4": 45370, "5": 37548 },
-            "HEB400": { "3": 68500, "3.5": 54521, "4": 45150, "5": 38371 },
-            "HEB450": { "3": 84516, "3.5": 67305, "4": 55774, "5": 47438 },
-            "HEB500": { "3": 102212, "3.5": 81433, "4": 67518, "5": 57464 },
-            "HEB550": { "3": 118484, "3.5": 94429, "4": 78326, "5": 66696 },
-            "HEB600": { "3.5": 108380, "4": 89928, "5": 76606 },
-            "HEB650": { "3.5": 123291, "4": 102330, "5": 87201 },
-            "HEB700": { "3.5": 139723, "4": 115994, "5": 102245 },
-            "HEB800": { "4": 142108, "5": 121192 },
-            "HEB900": { "4": 148389, "5": 129432 },
-            "HEB1000": { "4": 152168, "5": 134581 }
-        };
-
-        function interpolation(portee, valeurs) {
-            let cles = Object.keys(valeurs).map(Number).sort((a, b) => a - b);
-
-            if (valeurs[portee]) {
-                return valeurs[portee];
-            }
-
-            if (portee < cles[0] || portee > cles[cles.length - 1]) {
-                return null;
-            }
-
-            for (let i = 0; i < cles.length - 1; i++) {
-                if (portee >= cles[i] && portee <= cles[i + 1]) {
-                    let x1 = cles[i], x2 = cles[i + 1];
-                    let y1 = valeurs[x1], y2 = valeurs[x2];
-                    return y1 + ((portee - x1) / (x2 - x1)) * (y2 - y1);
-                }
-            }
-            return null;
-        }
-
-        function calculerHEB() {
-            let portee = parseFloat(document.getElementById('portee').value) || 0;
-            let typeHEB = document.getElementById('type_heb').value;
-
-            let chargeAdmissible = interpolation(portee, abaque_heb[typeHEB]);
-
-            if (chargeAdmissible !== null) {
-                document.getElementById('charge_admissible').innerText = `Charge admissible : ${chargeAdmissible.toFixed(2)} kg`;
-            } else {
-                document.getElementById('charge_admissible').innerText = "⚠️ Portée hors limites, aucune donnée disponible.";
-            }
-        }
-    </script>
+  <script>
+    function calculateBorders(){
+      const weight = parseFloat(document.getElementById("border-select").value);
+      const qty = parseFloat(document.getElementById("border-quantity").value) || 0;
+      document.getElementById("border-weight").textContent = `${weight.toFixed(2)} kg`;
+      document.getElementById("border-result").textContent = `${(weight*qty).toFixed(2)} kg`;
+    }
+    window.onload = calculateBorders;
+  </script>
 </body>
-
 </html>
