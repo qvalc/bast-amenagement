@@ -1,128 +1,182 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/png" href="../favicon.png">
+
   <title>Calculateur poids des Agrégats</title>
   <style>
-    :root{
-      --anth:#2b2f33;   /* gris anthracite pour les titres/labels */
-      --line:#e5e7eb;   /* bordures légères */
-      --muted:#6b7280;  /* gris secondaire */
+    :root {
+      --anth: #2b2f33;
+      /* gris anthracite pour les titres/labels */
+      --line: #e5e7eb;
+      /* bordures légères */
+      --muted: #6b7280;
+      /* gris secondaire */
     }
 
     /* Fond de page transparent */
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:transparent;
-      color:#333;
-      margin:0;
-      padding:0;
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: transparent;
+      color: #333;
+      margin: 0;
+      padding: 0;
     }
 
     /* Titre sans fond, texte anthracite */
-    h1{
-      text-align:center;
-      color:var(--anth);
-      margin:14px 0;
-      font-size:18px;
-      font-weight:700;
+    h1 {
+      text-align: center;
+      color: var(--anth);
+      margin: 14px 0;
+      font-size: 18px;
+      font-weight: 700;
     }
 
-    .table-container{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:14px;
-      margin:8px auto 16px;
-      background:transparent;          /* ✅ */
-      width:100%;
-      max-width:720px;
-      padding:0 10px;
+    .table-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin: 8px auto 16px;
+      background: transparent;
+      /* ✅ */
+      width: 100%;
+      max-width: 720px;
+      padding: 0 10px;
     }
 
-    .input-container{
-      text-align:center;
-      margin-bottom:6px;
+    .input-container {
+      text-align: center;
+      margin-bottom: 6px;
     }
 
-    .input-container label{
-      display:block;
-      font-size:13px;
-      color:var(--muted);
-      margin-bottom:6px;
+    .input-container label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
     }
 
     /* Champs lisibles (fond blanc), taille compacte et centrage */
-    select, input{
-      padding:6px 8px;
-      border:1px solid var(--line);
-      border-radius:8px;
-      text-align:center;
-      font-size:14px;
-      background:#fff;                 /* ✅ lisible sur fond transparent */
-      color:#333;
+    select,
+    input {
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      background: #fff;
+      /* ✅ lisible sur fond transparent */
+      color: #333;
     }
 
     /* Quantité compacte */
-    #aggregate-quantity{
-      width:90px;                      /* plus petit et fixe */
-      max-width:90px;
+    #aggregate-quantity {
+      width: 90px;
+      /* plus petit et fixe */
+      max-width: 90px;
     }
 
-    table{
-      border-collapse:collapse;
-      width:100%;
-      max-width:100%;
-      margin:0;
-      background:transparent;          /* ✅ */
-      border:1px solid var(--line);
-      font-size:14px;
-      color:#333;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      background: transparent;
+      /* ✅ */
+      border: 1px solid var(--line);
+      font-size: 14px;
+      color: #333;
     }
 
-    th, td{
-      text-align:center;
-      padding:10px;
-      border:1px solid var(--line);
+    th,
+    td {
+      text-align: center;
+      padding: 10px;
+      border: 1px solid var(--line);
     }
 
     /* En-têtes transparents + texte anthracite */
-    thead th{
-      background:transparent;          /* ✅ */
-      color:var(--anth);               /* ✅ */
-      font-weight:700;
+    thead th {
+      background: transparent;
+      /* ✅ */
+      color: var(--anth);
+      /* ✅ */
+      font-weight: 700;
     }
 
-    td span{ white-space:nowrap; }
+    td span {
+      white-space: nowrap;
+    }
 
     /* Mobile */
-    @media (max-width:480px){
-      table{ width:100%; font-size:12px; border:none; }
-      thead{ display:none; }
-      tbody, tr, td{ display:block; width:100%; background:transparent; }
-      tr{
-        margin-bottom:12px;
-        border-bottom:1px solid var(--line);
-        padding:6px 4px;
+    @media (max-width:480px) {
+      table {
+        width: 100%;
+        font-size: 12px;
+        border: none;
       }
-      td{
-        text-align:left;
-        padding:6px 0;
-        border:none;
+
+      thead {
+        display: none;
       }
-      td::before{
-        content:attr(data-label);
-        display:block;
-        font-weight:600;
-        color:var(--anth);             /* labels en mobile */
-        margin-bottom:4px;
+
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100%;
+        background: transparent;
       }
-      select{ width:100%; }
-      #aggregate-quantity{ width:60%; max-width:none; }
+
+      tr {
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+        padding: 6px 4px;
+      }
+
+      td {
+        text-align: left;
+        padding: 6px 0;
+        border: none;
+      }
+
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        color: var(--anth);
+        /* labels en mobile */
+        margin-bottom: 4px;
+      }
+
+      select {
+        width: 100%;
+      }
+
+      #aggregate-quantity {
+        width: 60%;
+        max-width: none;
+      }
     }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
   <h1>Calculateur poids des Agrégats</h1>
 
@@ -134,8 +188,14 @@
 
     <table>
       <thead>
-        <tr><th colspan="3">Agrégats</th></tr>
-        <tr><th>Dénomination</th><th>Poids moyen (kg/m³)</th><th>Résultat</th></tr>
+        <tr>
+          <th colspan="3">Agrégats</th>
+        </tr>
+        <tr>
+          <th>Dénomination</th>
+          <th>Poids moyen (kg/m³)</th>
+          <th>Résultat</th>
+        </tr>
       </thead>
       <tbody>
         <tr>
@@ -183,4 +243,5 @@
     window.onload = calculateAggregate;
   </script>
 </body>
+
 </html>

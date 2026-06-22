@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" type="image/png" href="../favicon.png">
+
     <title>Charge Admissible Plancher Bois</title>
     <style>
         body {
@@ -18,7 +22,8 @@
             margin-top: 10px;
         }
 
-        input, select {
+        input,
+        select {
             width: 40%;
             padding: 5px;
             margin-top: 5px;
@@ -40,7 +45,19 @@
             display: none;
         }
     </style>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-9GX0ZY7J95');
+    </script>
+
 </head>
+
 <body>
 
     <h2>Charge Admissible Plancher Bois</h2>
@@ -71,7 +88,8 @@
     </select>
 
     <p class="result" id="resultChargeAdmissible">Charge admissible : <span id="chargeAdmissible"></span> kg/m²</p>
-    <p class="result" id="resultChargeRequise">Charge requise pour ce plancher : <span id="chargeRequise"></span> kg/m²</p>
+    <p class="result" id="resultChargeRequise">Charge requise pour ce plancher : <span id="chargeRequise"></span> kg/m²
+    </p>
     <p class="alert" id="alerte"></p>
 
     <script>
@@ -114,14 +132,14 @@
                 if (chargeAdmissible > 7000) {
                     chargeAdmissible = 7000;
                 }
-            } 
+            }
             else if (longueur > longueursDisponibles[longueursDisponibles.length - 1]) {
                 let Lmax = longueursDisponibles[longueursDisponibles.length - 1];
                 let Cmax = sections[Lmax];
 
                 let facteurReduction = 1 / Math.pow(longueur / Lmax, 3.5);
                 chargeAdmissible = Cmax * facteurReduction;
-            } 
+            }
             else {
                 for (let i = 0; i < longueursDisponibles.length - 1; i++) {
                     let L1 = longueursDisponibles[i];
@@ -150,4 +168,5 @@
         }
     </script>
 </body>
+
 </html>

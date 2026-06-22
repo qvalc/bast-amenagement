@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="icon" type="image/png" href="../favicon.png">
-  
+
   <title>Chape</title>
-  <meta name="description" content="Calculez le volume, la charge et les matériaux nécessaires pour une chape. Résultats précis pour sable, ciment, eau et sacs selon vos dimensions.">
+  <meta name="description"
+    content="Calculez le volume, la charge et les matériaux nécessaires pour une chape. Résultats précis pour sable, ciment, eau et sacs selon vos dimensions.">
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
     :root {
       --anthracite: #2b2f33;
@@ -23,7 +29,8 @@
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      background: transparent; /* ✅ transparence globale */
+      background: transparent;
+      /* ✅ transparence globale */
       color: var(--text);
     }
 
@@ -37,7 +44,8 @@
     h1 {
       margin: 0;
       font-size: 1.8rem;
-      color: var(--anthracite); /* ✅ gris anthracite */
+      color: var(--anthracite);
+      /* ✅ gris anthracite */
       font-weight: 700;
     }
 
@@ -45,7 +53,8 @@
       max-width: 600px;
       margin: 30px auto;
       padding: 20px;
-      background: transparent; /* ✅ transparent */
+      background: transparent;
+      /* ✅ transparent */
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -60,35 +69,42 @@
       font-size: 14px;
     }
 
-    input, select {
-      width: 25%; /* ✅ réduit (1/4 de la largeur) */
+    input,
+    select {
+      width: 25%;
+      /* ✅ réduit (1/4 de la largeur) */
       padding: 6px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       font-size: 13px;
       text-align: right;
-      background: #fff; /* ✅ fond visible */
+      background: #fff;
+      /* ✅ fond visible */
       outline: none;
       transition: 0.15s ease;
     }
 
-    input:focus, select:focus {
+    input:focus,
+    select:focus {
       border-color: #cbd5e1;
-      box-shadow: 0 0 0 2px rgba(37,99,235,.08);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, .08);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
-      background: transparent; /* ✅ pas de fond */
+      background: transparent;
+      /* ✅ pas de fond */
     }
 
-    th, td {
+    th,
+    td {
       border: 1px solid var(--border);
       padding: 8px;
       text-align: center;
-      background: transparent; /* ✅ cellules transparentes */
+      background: transparent;
+      /* ✅ cellules transparentes */
       font-size: 13px;
     }
 
@@ -105,16 +121,43 @@
     }
 
     @media (max-width: 768px) {
-      input, select { width: 60%; font-size: 12px; padding: 5px; }
-      .container { max-width: 90%; padding: 15px; }
-      h1 { font-size: 1.4rem; }
-      label { font-size: 13px; }
+
+      input,
+      select {
+        width: 60%;
+        font-size: 12px;
+        padding: 5px;
+      }
+
+      .container {
+        max-width: 90%;
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      label {
+        font-size: 13px;
+      }
     }
 
     @media (max-width: 480px) {
-      table { display: block; margin-bottom: 20px; }
-      table thead { display: none; }
-      table tr { display: block; margin-bottom: 10px; }
+      table {
+        display: block;
+        margin-bottom: 20px;
+      }
+
+      table thead {
+        display: none;
+      }
+
+      table tr {
+        display: block;
+        margin-bottom: 10px;
+      }
+
       table td {
         display: block;
         border: none;
@@ -122,17 +165,37 @@
         text-align: left;
         padding: 6px 0;
       }
-      table td:last-child { border-bottom: none; }
+
+      table td:last-child {
+        border-bottom: none;
+      }
+
       table td:before {
         content: attr(data-label);
         font-weight: 700;
         color: var(--anthracite);
         display: block;
       }
-      input, select { width: 80%; }
+
+      input,
+      select {
+        width: 80%;
+      }
     }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
 
   <header>
@@ -173,7 +236,9 @@
           <td class="result" id="waterTotal">-</td>
         </tr>
 
-        <tr><td colspan="2" class="separator">OU</td></tr>
+        <tr>
+          <td colspan="2" class="separator">OU</td>
+        </tr>
 
         <tr>
           <td>Nombre de sacs</td>
@@ -188,7 +253,9 @@
           <td class="result" id="eauTotalSacs">-</td>
         </tr>
 
-        <tr><td colspan="2" class="separator">Volume & Charge</td></tr>
+        <tr>
+          <td colspan="2" class="separator">Volume & Charge</td>
+        </tr>
 
         <tr>
           <td>Volume total</td>
@@ -245,4 +312,5 @@
   </script>
 
 </body>
+
 </html>

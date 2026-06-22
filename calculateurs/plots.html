@@ -1,15 +1,21 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="icon" type="image/png" href="../favicon.png">
-  
+
   <title>Plots pour Terrasse</title>
-  <meta name="description" content="Calculez rapidement le nombre de plots nécessaires pour une terrasse en dalles ou sur lambourdes selon vos dimensions et votre configuration.">
+  <meta name="description"
+    content="Calculez rapidement le nombre de plots nécessaires pour une terrasse en dalles ou sur lambourdes selon vos dimensions et votre configuration.">
   <style>
-    *, *::before, *::after { box-sizing: border-box; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
 
     :root {
       --anthracite: #2b2f33;
@@ -23,7 +29,8 @@
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: transparent; /* ✅ fond transparent */
+      background: transparent;
+      /* ✅ fond transparent */
       color: var(--text);
     }
 
@@ -60,20 +67,25 @@
       text-align: center;
     }
 
-    select, input {
-      width: 25%; /* ✅ réduit à environ 1/4 */
+    select,
+    input {
+      width: 25%;
+      /* ✅ réduit à environ 1/4 */
       padding: 6px;
       border: 1px solid var(--border);
       border-radius: var(--radius);
       font-size: 13px;
-      background: #fff; /* ✅ fond visible */
-      text-align: center; /* ✅ centré */
+      background: #fff;
+      /* ✅ fond visible */
+      text-align: center;
+      /* ✅ centré */
       transition: 0.15s ease;
     }
 
-    select:focus, input:focus {
+    select:focus,
+    input:focus {
       border-color: #cbd5e1;
-      box-shadow: 0 0 0 2px rgba(37,99,235,.08);
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, .08);
       outline: none;
     }
 
@@ -105,17 +117,48 @@
     }
 
     @media (max-width: 768px) {
-      select, input { width: 60%; font-size: 12px; padding: 5px; }
-      .container { padding: 15px; }
-      h1 { font-size: 1.5rem; }
+
+      select,
+      input {
+        width: 60%;
+        font-size: 12px;
+        padding: 5px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
     }
 
     @media (max-width: 480px) {
-      select, input { width: 80%; }
-      label { font-size: 13px; }
+
+      select,
+      input {
+        width: 80%;
+      }
+
+      label {
+        font-size: 13px;
+      }
     }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
 
   <h1>Plots pour Terrasse</h1>
@@ -258,4 +301,5 @@
   </script>
 
 </body>
+
 </html>

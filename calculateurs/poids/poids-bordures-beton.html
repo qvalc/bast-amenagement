@@ -1,57 +1,153 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" href="../favicon.png">
+
   <title>Poids des bordures Béton</title>
   <style>
-    :root{
-      --anth:#2b2f33;     /* gris anthracite pour les titres */
-      --line:#e5e7eb;
-      --muted:#6b7280;
+    :root {
+      --anth: #2b2f33;
+      /* gris anthracite pour les titres */
+      --line: #e5e7eb;
+      --muted: #6b7280;
     }
 
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      margin:0;padding:0;background:transparent;color:#333;text-align:center;
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      color: #333;
+      text-align: center;
     }
 
-    h1{font-size:18px;margin:10px 0 15px;color:var(--anth);font-weight:600}
-
-    .table-container{display:flex;flex-direction:column;align-items:center;max-width:650px;width:100%;margin:5px auto 10px;background:transparent}
-
-    .input-container{margin-bottom:10px}
-    label{font-size:13px;color:var(--muted);margin-right:6px}
-
-    input, select{
-      padding:6px;border:1px solid var(--line);border-radius:6px;font-size:14px;text-align:center;background:#fff;color:#333
+    h1 {
+      font-size: 18px;
+      margin: 10px 0 15px;
+      color: var(--anth);
+      font-weight: 600
     }
-    input{width:90px}
 
-    table{
-      border-collapse:collapse;width:90%;margin:auto;background:transparent;border:1px solid var(--line);font-size:14px;color:#333
+    .table-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 650px;
+      width: 100%;
+      margin: 5px auto 10px;
+      background: transparent
     }
-    th, td{padding:10px;border:1px solid var(--line);text-align:center}
+
+    .input-container {
+      margin-bottom: 10px
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-right: 6px
+    }
+
+    input,
+    select {
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: center;
+      background: #fff;
+      color: #333
+    }
+
+    input {
+      width: 90px
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 90%;
+      margin: auto;
+      background: transparent;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      color: #333
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid var(--line);
+      text-align: center
+    }
 
     /* ✅ En-têtes transparents + texte anthracite */
-    th{
-      background:transparent;   /* fond d’en-tête transparent */
-      color:var(--anth);        /* texte anthracite */
-      font-weight:600;
+    th {
+      background: transparent;
+      /* fond d’en-tête transparent */
+      color: var(--anth);
+      /* texte anthracite */
+      font-weight: 600;
     }
 
-    td span{white-space:nowrap}
+    td span {
+      white-space: nowrap
+    }
 
-    @media (max-width:480px){
-      table{font-size:12px;border:none}
-      thead{display:none}
-      tbody, tr, td{display:block;width:100%;background:transparent}
-      tr{margin-bottom:10px;border-bottom:1px solid var(--line)}
-      td{text-align:left;padding:6px 0;border:none}
-      td::before{content:attr(data-label);display:block;font-weight:600;color:var(--anth);margin-bottom:3px}
+    @media (max-width:480px) {
+      table {
+        font-size: 12px;
+        border: none
+      }
+
+      thead {
+        display: none
+      }
+
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100%;
+        background: transparent
+      }
+
+      tr {
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--line)
+      }
+
+      td {
+        text-align: left;
+        padding: 6px 0;
+        border: none
+      }
+
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        color: var(--anth);
+        margin-bottom: 3px
+      }
     }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
   <h1>Poids des dordures Béton</h1>
 
@@ -63,8 +159,15 @@
 
     <table>
       <thead>
-        <tr><th colspan="4">Bordures Béton</th></tr>
-        <tr><th>Dénomination</th><th>Taille</th><th>Poids</th><th>Résultat</th></tr>
+        <tr>
+          <th colspan="4">Bordures Béton</th>
+        </tr>
+        <tr>
+          <th>Dénomination</th>
+          <th>Taille</th>
+          <th>Poids</th>
+          <th>Résultat</th>
+        </tr>
       </thead>
       <tbody>
         <tr>
@@ -86,13 +189,14 @@
   </div>
 
   <script>
-    function calculateBorders(){
+    function calculateBorders() {
       const weight = parseFloat(document.getElementById("border-select").value);
       const qty = parseFloat(document.getElementById("border-quantity").value) || 0;
       document.getElementById("border-weight").textContent = `${weight.toFixed(2)} kg`;
-      document.getElementById("border-result").textContent = `${(weight*qty).toFixed(2)} kg`;
+      document.getElementById("border-result").textContent = `${(weight * qty).toFixed(2)} kg`;
     }
     window.onload = calculateBorders;
   </script>
 </body>
+
 </html>

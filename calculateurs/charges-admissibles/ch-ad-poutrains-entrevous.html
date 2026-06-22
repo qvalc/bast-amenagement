@@ -1,170 +1,191 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Charge Admissible Poutrains & Entrevous</title>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        margin: 0;
-        padding: 20px;
-        background: transparent; /* ✅ Fond transparent */
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    h2 {
-        color: #2b2f33; /* ✅ Gris anthracite */
-        margin-bottom: 20px;
-    }
+    <link rel="icon" type="image/png" href="../favicon.png">
 
-    .container {
-        background: transparent; /* ✅ Pas de fond blanc */
-        padding: 20px;
-        max-width: 600px;
-        margin: auto;
-        border-radius: 10px;
-    }
-
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 6px;
-        font-size: 14px;
-        color: #2b2f33;
-    }
-
-    select {
-        width: 100%;
-        padding: 8px;
-        font-size: 14px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        background: #fff; /* ✅ Cases bien visibles */
-        text-align: center;
-    }
-
-    #result {
-        font-size: 18px;
-        font-weight: bold;
-        margin-top: 15px;
-    }
-
-    #result.safe {
-        color: #2e7d32;
-    }
-
-    #result.warning {
-        color: #c62828;
-    }
-
-    @media (max-width: 600px) {
-        .grid {
-            grid-template-columns: 1fr;
+    <title>Charge Admissible Poutrains & Entrevous</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background: transparent;
+            /* ✅ Fond transparent */
         }
-    }
-</style>
+
+        h2 {
+            color: #2b2f33;
+            /* ✅ Gris anthracite */
+            margin-bottom: 20px;
+        }
+
+        .container {
+            background: transparent;
+            /* ✅ Pas de fond blanc */
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 10px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            color: #2b2f33;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background: #fff;
+            /* ✅ Cases bien visibles */
+            text-align: center;
+        }
+
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        #result.safe {
+            color: #2e7d32;
+        }
+
+        #result.warning {
+            color: #c62828;
+        }
+
+        @media (max-width: 600px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-9GX0ZY7J95');
+    </script>
+
 </head>
+
 <body>
 
-<div class="container">
-    <h2>Charge Admissible Poutrains & Entrevous</h2>
+    <div class="container">
+        <h2>Charge Admissible Poutrains & Entrevous</h2>
 
-    <div class="grid">
-        <div>
-            <label for="plancherType">Type de Plancher</label>
-            <select id="plancherType" onchange="calculerCharge()">
-                <option value="Rectobeton">Rectobeton</option>
-                <option value="Rectoceram">Rectoceram</option>
-                <option value="Rectolight">Rectolight</option>
-                <option value="Rectosten">Rectosten</option>
-                <option value="Rectoplast">Rectoplast</option>
-            </select>
+        <div class="grid">
+            <div>
+                <label for="plancherType">Type de Plancher</label>
+                <select id="plancherType" onchange="calculerCharge()">
+                    <option value="Rectobeton">Rectobeton</option>
+                    <option value="Rectoceram">Rectoceram</option>
+                    <option value="Rectolight">Rectolight</option>
+                    <option value="Rectosten">Rectosten</option>
+                    <option value="Rectoplast">Rectoplast</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="portee">Portée des Poutrelles (m)</label>
+                <select id="portee" onchange="calculerCharge()">
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="dalleEpaisseur">Épaisseur de la Dalle (cm)</label>
+                <select id="dalleEpaisseur" onchange="calculerCharge()">
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="8">8</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="ferraillage">Type de Ferraillage</label>
+                <select id="ferraillage" onchange="calculerCharge()">
+                    <option value="simple">Simple</option>
+                    <option value="renforce">Renforcé</option>
+                </select>
+            </div>
         </div>
 
-        <div>
-            <label for="portee">Portée des Poutrelles (m)</label>
-            <select id="portee" onchange="calculerCharge()">
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="dalleEpaisseur">Épaisseur de la Dalle (cm)</label>
-            <select id="dalleEpaisseur" onchange="calculerCharge()">
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="8">8</option>
-            </select>
-        </div>
-
-        <div>
-            <label for="ferraillage">Type de Ferraillage</label>
-            <select id="ferraillage" onchange="calculerCharge()">
-                <option value="simple">Simple</option>
-                <option value="renforce">Renforcé</option>
-            </select>
-        </div>
+        <p id="result" class="safe">Charge admissible : -- kg/m²</p>
     </div>
 
-    <p id="result" class="safe">Charge admissible : -- kg/m²</p>
-</div>
+    <script>
+        function calculerCharge() {
+            const plancherType = document.getElementById("plancherType").value;
+            const portee = parseInt(document.getElementById("portee").value);
+            const dalleEpaisseur = parseInt(document.getElementById("dalleEpaisseur").value);
+            const ferraillage = document.getElementById("ferraillage").value;
 
-<script>
-function calculerCharge() {
-    const plancherType = document.getElementById("plancherType").value;
-    const portee = parseInt(document.getElementById("portee").value);
-    const dalleEpaisseur = parseInt(document.getElementById("dalleEpaisseur").value);
-    const ferraillage = document.getElementById("ferraillage").value;
+            const charges = {
+                "Rectobeton": { 3: 500, 4: 450, 5: 400, 6: 350 },
+                "Rectoceram": { 3: 480, 4: 430, 5: 380, 6: 340 },
+                "Rectolight": { 3: 450, 4: 400, 5: 350, 6: 300 },
+                "Rectosten": { 3: 470, 4: 420, 5: 370, 6: 330 },
+                "Rectoplast": { 3: 460, 4: 410, 5: 360, 6: 320 }
+            };
 
-    const charges = {
-        "Rectobeton": { 3: 500, 4: 450, 5: 400, 6: 350 },
-        "Rectoceram": { 3: 480, 4: 430, 5: 380, 6: 340 },
-        "Rectolight": { 3: 450, 4: 400, 5: 350, 6: 300 },
-        "Rectosten": { 3: 470, 4: 420, 5: 370, 6: 330 },
-        "Rectoplast": { 3: 460, 4: 410, 5: 360, 6: 320 }
-    };
+            let chargeBase = charges[plancherType][portee];
 
-    let chargeBase = charges[plancherType][portee];
+            if (dalleEpaisseur > 6) {
+                chargeBase *= 1.2;
+            } else if (dalleEpaisseur < 5) {
+                chargeBase *= 0.9;
+            }
 
-    if (dalleEpaisseur > 6) {
-        chargeBase *= 1.2;
-    } else if (dalleEpaisseur < 5) {
-        chargeBase *= 0.9;
-    }
+            if (ferraillage === "renforce") {
+                chargeBase *= 1.1;
+            }
 
-    if (ferraillage === "renforce") {
-        chargeBase *= 1.1;
-    }
+            chargeBase = Math.round(chargeBase);
 
-    chargeBase = Math.round(chargeBase);
+            const resultElement = document.getElementById("result");
+            if (chargeBase < 300) {
+                resultElement.className = "warning";
+                resultElement.innerText = `⚠️ Charge admissible faible : ${chargeBase} kg/m²`;
+            } else {
+                resultElement.className = "safe";
+                resultElement.innerText = `Charge admissible : ${chargeBase} kg/m²`;
+            }
+        }
 
-    const resultElement = document.getElementById("result");
-    if (chargeBase < 300) {
-        resultElement.className = "warning";
-        resultElement.innerText = `⚠️ Charge admissible faible : ${chargeBase} kg/m²`;
-    } else {
-        resultElement.className = "safe";
-        resultElement.innerText = `Charge admissible : ${chargeBase} kg/m²`;
-    }
-}
-
-calculerCharge();
-</script>
+        calculerCharge();
+    </script>
 
 </body>
+
 </html>

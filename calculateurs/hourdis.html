@@ -1,87 +1,110 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <link rel="icon" type="image/png" href="../favicon.png">
-  
+
   <title>Hourdis</title>
-  <meta name="description" content="Calculez rapidement longueurs d’hourdis, nombre de pièces, trous restants et volume de béton pour vos dalles. Feuilles multiples et récapitulatif global." />
+  <meta name="description"
+    content="Calculez rapidement longueurs d’hourdis, nombre de pièces, trous restants et volume de béton pour vos dalles. Feuilles multiples et récapitulatif global." />
   <style>
     /* Base */
-    *, *::before, *::after { box-sizing: border-box; }
-    :root{
-      --anthracite:#2b2f33;   /* gris anthracite pour les titres */
-      --text:#333;
-      --border:#e5e7eb;
-      --shadow:0 2px 12px rgba(15,23,42,.06);
-      --radius:12px;
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
     }
 
-    body{
+    :root {
+      --anthracite: #2b2f33;
+      /* gris anthracite pour les titres */
+      --text: #333;
+      --border: #e5e7eb;
+      --shadow: 0 2px 12px rgba(15, 23, 42, .06);
+      --radius: 12px;
+    }
+
+    body {
       font-family: Arial, sans-serif;
-      background: transparent;   /* ✅ transparence */
+      background: transparent;
+      /* ✅ transparence */
       color: var(--text);
       margin: 0;
       padding: 0;
     }
 
-    .container{
+    .container {
       max-width: 800px;
       margin: 20px auto;
       padding: 20px;
-      background: transparent;    /* ✅ transparence */
+      background: transparent;
+      /* ✅ transparence */
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
     }
 
-    h1, h2{
+    h1,
+    h2 {
       text-align: center;
-      color: var(--anthracite);   /* ✅ titres anthracite */
+      color: var(--anthracite);
+      /* ✅ titres anthracite */
       margin: 0 0 16px;
       font-weight: 700;
     }
 
     /* Table */
-    table{
+    table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 15px;
-      background: transparent;    /* ✅ pas de fond */
+      background: transparent;
+      /* ✅ pas de fond */
     }
-    th, td{
+
+    th,
+    td {
       border: 1px solid var(--border);
       padding: 8px;
       text-align: left;
       font-size: 14px;
-      background: transparent;    /* ✅ en-têtes et cellules transparents */
+      background: transparent;
+      /* ✅ en-têtes et cellules transparents */
     }
-    th{ font-weight: 700; color: var(--anthracite); }
+
+    th {
+      font-weight: 700;
+      color: var(--anthracite);
+    }
 
     /* Champs */
-    .input{
+    .input {
       width: 100%;
       max-width: 120px;
       padding: 6px 8px;
       border: 1px solid #ccc;
       border-radius: 8px;
       text-align: right;
-      background: transparent;    /* ✅ champs transparents */
+      background: transparent;
+      /* ✅ champs transparents */
       outline: none;
     }
-    .input:focus{
-      border-color:#cbd5e1;
-      box-shadow: 0 0 0 2px rgba(37,99,235,.08);
+
+    .input:focus {
+      border-color: #cbd5e1;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, .08);
     }
 
     /* Bouton sobre (anthracite) */
-    .btn{
+    .btn {
       display: inline-block;
       width: 100%;
       padding: 10px 20px;
-      background: transparent;         /* ✅ transparence */
+      background: transparent;
+      /* ✅ transparence */
       color: var(--anthracite);
       border: 1px solid var(--anthracite);
       border-radius: 8px;
@@ -89,11 +112,12 @@
       margin-bottom: 15px;
       font-weight: 600;
     }
-    .btn:hover{
-      background: rgba(43,47,51,.06);
+
+    .btn:hover {
+      background: rgba(43, 47, 51, .06);
     }
 
-    .total-volume{
+    .total-volume {
       font-weight: 700;
       color: var(--anthracite);
       text-align: center;
@@ -101,34 +125,80 @@
     }
 
     /* Responsive */
-    @media (max-width: 768px){
-      body{ font-size: 16px; }
-      .container{ padding: 12px; }
-      .input{ width: 90%; margin: 8px auto; text-align: center; }
-      .btn{ font-size: 14px; padding: 10px 16px; }
+    @media (max-width: 768px) {
+      body {
+        font-size: 16px;
+      }
+
+      .container {
+        padding: 12px;
+      }
+
+      .input {
+        width: 90%;
+        margin: 8px auto;
+        text-align: center;
+      }
+
+      .btn {
+        font-size: 14px;
+        padding: 10px 16px;
+      }
     }
-    @media (max-width: 480px){
-      table{ display: block; margin-bottom: 20px; }
-      table thead{ display: none; }
-      table tr{ display: block; margin-bottom: 10px; }
-      table td{
+
+    @media (max-width: 480px) {
+      table {
+        display: block;
+        margin-bottom: 20px;
+      }
+
+      table thead {
+        display: none;
+      }
+
+      table tr {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      table td {
         display: block;
         border: none;
         border-bottom: 1px solid var(--border);
         padding: 8px 0;
       }
-      table td:last-child{ border-bottom: none; }
-      table td:before{
+
+      table td:last-child {
+        border-bottom: none;
+      }
+
+      table td:before {
         content: attr(data-label);
         font-weight: 700;
         display: block;
         color: var(--anthracite);
         margin-bottom: 4px;
       }
-      .btn{ font-size: 13px; width: 90%; }
+
+      .btn {
+        font-size: 13px;
+        width: 90%;
+      }
     }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
   <div class="container" id="app">
     <h1>Hourdis</h1>
@@ -155,7 +225,7 @@
   </div>
 
   <script>
-    function creerFeuille(){
+    function creerFeuille() {
       const feuilleId = `feuille-${Date.now()}`;
       const feuille = document.createElement('div');
       feuille.className = 'container';
@@ -237,20 +307,20 @@
       document.getElementById('feuilles').appendChild(feuille);
     }
 
-    function calculer(feuilleId){
+    function calculer(feuilleId) {
       const feuille = document.getElementById(feuilleId);
-      const inputs = feuille.querySelectorAll('input[data-id="'+feuilleId+'"]');
+      const inputs = feuille.querySelectorAll('input[data-id="' + feuilleId + '"]');
 
       let data = {};
       inputs.forEach(input => { data[input.name] = parseFloat(input.value) || 0; });
 
       const hourdisLongueur = data.largeur + 2 * data.appui;
-      const hourdisLargeur  = data.longueur + 2 * data.appui;
+      const hourdisLargeur = data.longueur + 2 * data.appui;
 
-      const nbHourdisLargeur  = Math.floor(data.largeur  / 0.60);
-      const trouLargeur       = data.largeur  - (nbHourdisLargeur  * 0.60);
+      const nbHourdisLargeur = Math.floor(data.largeur / 0.60);
+      const trouLargeur = data.largeur - (nbHourdisLargeur * 0.60);
       const nbHourdisLongueur = Math.floor(data.longueur / 0.60);
-      const trouLongueur      = data.longueur - (nbHourdisLongueur * 0.60);
+      const trouLongueur = data.longueur - (nbHourdisLongueur * 0.60);
 
       const volumeBeton = (data.longueur * data.largeur * data.epaisseur).toFixed(3);
 
@@ -267,7 +337,7 @@
       mettreAJourResumeGlobal();
     }
 
-    function mettreAJourResumeGlobal(){
+    function mettreAJourResumeGlobal() {
       const resumes = document.querySelectorAll('.container[id^="feuille-"]');
       const resumeGlobal = {};
       let totalVolumeBeton = 0;
@@ -299,4 +369,5 @@
     creerFeuille();
   </script>
 </body>
+
 </html>

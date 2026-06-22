@@ -1,111 +1,158 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/png" href="../favicon.png">
+
   <title>Poids Linteaux & Prélinteaux</title>
   <style>
-    :root{
-      --anth:#2b2f33;   /* gris anthracite pour titres/en-têtes */
-      --muted:#6b7280;  /* gris secondaire */
-      --line:#e5e7eb;   /* bordures légères */
+    :root {
+      --anth: #2b2f33;
+      /* gris anthracite pour titres/en-têtes */
+      --muted: #6b7280;
+      /* gris secondaire */
+      --line: #e5e7eb;
+      /* bordures légères */
     }
 
     /* Fond transparent + typo sobre */
-    body{
+    body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: transparent;
-      color:#333;
-      margin:0;
-      padding:0;
+      color: #333;
+      margin: 0;
+      padding: 0;
     }
 
     /* Titre principal anthracite, sans fond */
-    h1{
-      text-align:center;
-      color:var(--anth);
-      margin:14px 0;
-      font-size:18px;
-      font-weight:600;
+    h1 {
+      text-align: center;
+      color: var(--anth);
+      margin: 14px 0;
+      font-size: 18px;
+      font-weight: 600;
     }
 
-    .table-container{
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:14px;
-      margin:6px auto 14px;
-      background: transparent; /* pas de fond */
-      width:100%;
-      max-width:720px;
-      padding:0 10px;
+    .table-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      margin: 6px auto 14px;
+      background: transparent;
+      /* pas de fond */
+      width: 100%;
+      max-width: 720px;
+      padding: 0 10px;
     }
 
-    table{
-      border-collapse:collapse;
-      width:100%;
-      background: transparent;        /* ✅ transparent */
-      border:1px solid var(--line);
-      font-size:14px;
-      color:#333;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: transparent;
+      /* ✅ transparent */
+      border: 1px solid var(--line);
+      font-size: 14px;
+      color: #333;
     }
 
-    th, td{
-      text-align:center;
-      padding:10px;
-      border:1px solid var(--line);
+    th,
+    td {
+      text-align: center;
+      padding: 10px;
+      border: 1px solid var(--line);
     }
 
     /* En-têtes transparents + texte anthracite */
-    thead th{
-      background: transparent;         /* ✅ pas de fond */
-      color:var(--anth);               /* ✅ texte anthracite */
-      font-weight:600;
+    thead th {
+      background: transparent;
+      /* ✅ pas de fond */
+      color: var(--anth);
+      /* ✅ texte anthracite */
+      font-weight: 600;
     }
 
     /* Champs centrés, fond blanc pour lisibilité */
-    select, input{
-      padding:6px 8px;
-      border:1px solid var(--line);
-      border-radius:6px;
-      font-size:14px;
-      text-align:center;
-      background:#fff;                 /* ✅ champ non transparent */
-      color:#333;
-      width:100%;
-      max-width:160px;
+    select,
+    input {
+      padding: 6px 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 14px;
+      text-align: center;
+      background: #fff;
+      /* ✅ champ non transparent */
+      color: #333;
+      width: 100%;
+      max-width: 160px;
     }
 
-    td span{ white-space:nowrap; }
+    td span {
+      white-space: nowrap;
+    }
 
     /* Mobile */
-    @media (max-width:480px){
-      table{ font-size:12px; border:none; }
-      thead{ display:none; }
-      tbody, tr, td{ display:block; width:100%; background:transparent; }
-      tr{
-        margin-bottom:12px;
-        border-bottom:1px solid var(--line);
-        padding:6px 4px;
+    @media (max-width:480px) {
+      table {
+        font-size: 12px;
+        border: none;
       }
-      td{
-        text-align:left;
-        padding:6px 0;
-        border:none;
+
+      thead {
+        display: none;
       }
-      td::before{
-        content:attr(data-label);
-        display:block;
-        font-weight:600;
-        color:var(--anth);             /* labels anthracite en mobile */
-        margin-bottom:4px;
+
+      tbody,
+      tr,
+      td {
+        display: block;
+        width: 100%;
+        background: transparent;
       }
-      select, input{
-        max-width:100%;
+
+      tr {
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--line);
+        padding: 6px 4px;
+      }
+
+      td {
+        text-align: left;
+        padding: 6px 0;
+        border: none;
+      }
+
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        color: var(--anth);
+        /* labels anthracite en mobile */
+        margin-bottom: 4px;
+      }
+
+      select,
+      input {
+        max-width: 100%;
       }
     }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
   <h1>Poids Linteaux & Prélinteaux</h1>
 
@@ -113,7 +160,9 @@
     <!-- Linteaux creux -->
     <table>
       <thead>
-        <tr><th colspan="5">Linteaux Creux</th></tr>
+        <tr>
+          <th colspan="5">Linteaux Creux</th>
+        </tr>
         <tr>
           <th>Taille</th>
           <th>Longueur (cm)</th>
@@ -148,7 +197,9 @@
     <!-- Prélinteaux -->
     <table>
       <thead>
-        <tr><th colspan="5">Prélinteaux</th></tr>
+        <tr>
+          <th colspan="5">Prélinteaux</th>
+        </tr>
         <tr>
           <th>Taille</th>
           <th>Longueur (cm)</th>
@@ -213,10 +264,11 @@
     }
 
     // Init
-    window.onload = function(){
+    window.onload = function () {
       calculateLinteaux();
       calculatePrelinteaux();
     };
   </script>
 </body>
+
 </html>

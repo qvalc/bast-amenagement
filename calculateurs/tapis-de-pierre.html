@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,7 +14,7 @@
       margin: 0;
       padding: 1rem;
       background: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text","Segoe UI", sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
     }
 
     .tp-wrapper {
@@ -204,13 +205,26 @@
       }
     }
   </style>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
 
   <div class="tp-wrapper">
     <div class="tp-title">TAPIS DE PIERRE</div>
     <div class="tp-sub">
-      Indiquez la surface et les paramètres de pose pour estimer les consommations de résine, granulats et produits associés, pour une application horizontale et verticale.
+      Indiquez la surface et les paramètres de pose pour estimer les consommations de résine, granulats et produits
+      associés, pour une application horizontale et verticale.
     </div>
 
     <!-- Formulaire -->
@@ -219,8 +233,7 @@
         <label class="tp-label" for="surface">
           Surface souhaitée <span>(m²)</span>
         </label>
-        <input type="number" id="surface" class="tp-input"
-               placeholder="Entrez la surface en m²" min="0" step="any" />
+        <input type="number" id="surface" class="tp-input" placeholder="Entrez la surface en m²" min="0" step="any" />
       </div>
 
       <div class="tp-field">
@@ -265,12 +278,17 @@
       <p class="tp-result-line"><span class="label">Bouche-pore :</span> <span id="bouchePore">–</span></p>
 
       <h3 class="tp-vertical-title">Application verticale (escaliers, contremarches, murs)</h3>
-      <p class="tp-result-line"><span class="label">Épaisseur prise en compte :</span> <span id="epaisseur_vertical">–</span></p>
+      <p class="tp-result-line"><span class="label">Épaisseur prise en compte :</span> <span
+          id="epaisseur_vertical">–</span></p>
       <p class="tp-result-line"><span class="label">Primaire vertical :</span> <span id="primaire_vertical">–</span></p>
-      <p class="tp-result-line"><span class="label">Sable de Quartz vertical :</span> <span id="sableQuartz_vertical">–</span></p>
-      <p class="tp-result-line"><span class="label">PUVB.02 / QC PU-VERTICAL BINDER 02 :</span> <span id="puvb02_vertical">–</span></p>
-      <p class="tp-result-line"><span class="label">Granulats verticaux :</span> <span id="granulats_vertical">–</span></p>
-      <p class="tp-result-line"><span class="label">Bouche-pore vertical :</span> <span id="bouchePore_vertical">–</span></p>
+      <p class="tp-result-line"><span class="label">Sable de Quartz vertical :</span> <span
+          id="sableQuartz_vertical">–</span></p>
+      <p class="tp-result-line"><span class="label">PUVB.02 / QC PU-VERTICAL BINDER 02 :</span> <span
+          id="puvb02_vertical">–</span></p>
+      <p class="tp-result-line"><span class="label">Granulats verticaux :</span> <span id="granulats_vertical">–</span>
+      </p>
+      <p class="tp-result-line"><span class="label">Bouche-pore vertical :</span> <span
+          id="bouchePore_vertical">–</span></p>
 
       <p class="tp-note-empty" id="tp-note">
         Complétez la surface et l'épaisseur pour afficher les consommations estimées.
@@ -395,4 +413,5 @@
   </script>
 
 </body>
+
 </html>

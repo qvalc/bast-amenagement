@@ -1,230 +1,232 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="icon" type="image/png" href="../favicon.png">
-  
+
   <title>Façades isolantes – Bast Aménagement</title>
 
   <style>
-    body{
-      margin:0;
-      padding:1rem;
-      background:#e5e7eb; /* pour test local ; sur Wix tu peux mettre transparent */
-      font-family:system-ui, -apple-system, BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
-      color:#111827;
+    body {
+      margin: 0;
+      padding: 1rem;
+      background: #e5e7eb;
+      /* pour test local ; sur Wix tu peux mettre transparent */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+      color: #111827;
     }
 
-    .fi-wrapper{
-      max-width:880px;
-      margin:2.3rem auto;
-      padding:1.7rem 1.8rem 1.9rem;
-      background:rgba(255,255,255,0.94);
-      border-radius:22px;
-      border:1px solid rgba(0,0,0,0.04);
+    .fi-wrapper {
+      max-width: 880px;
+      margin: 2.3rem auto;
+      padding: 1.7rem 1.8rem 1.9rem;
+      background: rgba(255, 255, 255, 0.94);
+      border-radius: 22px;
+      border: 1px solid rgba(0, 0, 0, 0.04);
       box-shadow:
-        0 18px 45px rgba(15,23,42,0.10),
-        0 0 0 1px rgba(255,255,255,0.6);
-      backdrop-filter:blur(18px);
+        0 18px 45px rgba(15, 23, 42, 0.10),
+        0 0 0 1px rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(18px);
     }
 
-    .fi-title{
-      text-align:center;
-      font-size:1.35rem;
-      margin-bottom:0.55rem;
-      text-transform:uppercase;
-      letter-spacing:0.16em;
-      font-weight:500;
+    .fi-title {
+      text-align: center;
+      font-size: 1.35rem;
+      margin-bottom: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-weight: 500;
     }
 
-    .fi-sub{
-      text-align:center;
-      font-size:0.96rem;
-      color:#6b7280;
-      max-width:640px;
-      margin:0 auto 1.6rem;
-      line-height:1.6;
+    .fi-sub {
+      text-align: center;
+      font-size: 0.96rem;
+      color: #6b7280;
+      max-width: 640px;
+      margin: 0 auto 1.6rem;
+      line-height: 1.6;
     }
 
     /* Formulaire */
-    .fi-form{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:1.05rem 1.6rem;
-      margin-bottom:1.6rem;
+    .fi-form {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.05rem 1.6rem;
+      margin-bottom: 1.6rem;
     }
 
-    .fi-field{
-      display:flex;
-      flex-direction:column;
-      gap:0.22rem;
+    .fi-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.22rem;
     }
 
-    .fi-label{
-      font-size:0.88rem;
-      font-weight:500;
-      color:#374151;
+    .fi-label {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: #374151;
     }
 
-    .fi-label span{
-      font-weight:400;
-      color:#9ca3af;
-      font-size:0.84rem;
+    .fi-label span {
+      font-weight: 400;
+      color: #9ca3af;
+      font-size: 0.84rem;
     }
 
-    .fi-input{
-      padding:0.62rem 0.9rem;
-      border-radius:999px;
-      border:1px solid rgba(148,163,184,0.5);
-      font-size:0.95rem;
-      outline:none;
-      background:radial-gradient(circle at top left,
-        rgba(255,255,255,0.96),
-        rgba(243,244,246,0.96));
+    .fi-input {
+      padding: 0.62rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      font-size: 0.95rem;
+      outline: none;
+      background: radial-gradient(circle at top left,
+          rgba(255, 255, 255, 0.96),
+          rgba(243, 244, 246, 0.96));
       box-shadow:
-        inset 0 0 0 0 rgba(255,255,255,0),
-        0 1px 3px rgba(148,163,184,0.35);
+        inset 0 0 0 0 rgba(255, 255, 255, 0),
+        0 1px 3px rgba(148, 163, 184, 0.35);
       transition:
         border-color 0.15s ease,
         box-shadow 0.15s ease,
         background 0.15s ease,
         transform 0.08s ease;
-      text-align:center;
-      box-sizing:border-box;
-      width:100%;
+      text-align: center;
+      box-sizing: border-box;
+      width: 100%;
     }
 
-    .fi-input:focus{
-      border-color:#111827;
-      background:#ffffff;
+    .fi-input:focus {
+      border-color: #111827;
+      background: #ffffff;
       box-shadow:
-        inset 0 0 0 1px rgba(17,24,39,0.06),
-        0 0 0 6px rgba(17,24,39,0.07);
-      transform:translateY(-0.5px);
+        inset 0 0 0 1px rgba(17, 24, 39, 0.06),
+        0 0 0 6px rgba(17, 24, 39, 0.07);
+      transform: translateY(-0.5px);
     }
 
-    .fi-input::placeholder{
-      color:#c4cbd5;
+    .fi-input::placeholder {
+      color: #c4cbd5;
     }
 
-    .fi-divider{
-      height:1px;
-      background:linear-gradient(to right,
-        rgba(148,163,184,0),
-        rgba(148,163,184,0.55),
-        rgba(148,163,184,0));
-      margin:0.3rem 0 1.35rem;
+    .fi-divider {
+      height: 1px;
+      background: linear-gradient(to right,
+          rgba(148, 163, 184, 0),
+          rgba(148, 163, 184, 0.55),
+          rgba(148, 163, 184, 0));
+      margin: 0.3rem 0 1.35rem;
     }
 
     /* Tableau résultats */
-    .fi-table-wrapper{
-      overflow-x:auto;
+    .fi-table-wrapper {
+      overflow-x: auto;
     }
 
-    table.fi-table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:0.9rem;
-      background:rgba(255,255,255,0.98);
-      border-radius:18px;
-      overflow:hidden;
-      box-shadow:0 10px 28px rgba(15,23,42,0.08);
+    table.fi-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
     }
 
     .fi-table th,
-    .fi-table td{
-      padding:0.65rem 1rem;
-      border-bottom:1px solid rgba(229,231,235,0.8);
-      text-align:left;
+    .fi-table td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid rgba(229, 231, 235, 0.8);
+      text-align: left;
     }
 
-    .fi-table thead th{
-      font-weight:600;
-      background:#f9fafb;
+    .fi-table thead th {
+      font-weight: 600;
+      background: #f9fafb;
     }
 
-    .fi-table tbody tr:nth-child(odd){
-      background:#f9fafb;
+    .fi-table tbody tr:nth-child(odd) {
+      background: #f9fafb;
     }
 
-    .fi-table td.fi-res{
-      text-align:right;
-      white-space:nowrap;
+    .fi-table td.fi-res {
+      text-align: right;
+      white-space: nowrap;
     }
 
     /* Responsive */
-    @media (max-width:768px){
-      .fi-wrapper{
-        margin:1.7rem 0.9rem 2rem;
-        padding:1.35rem 1.1rem 1.65rem;
-        border-radius:20px;
+    @media (max-width:768px) {
+      .fi-wrapper {
+        margin: 1.7rem 0.9rem 2rem;
+        padding: 1.35rem 1.1rem 1.65rem;
+        border-radius: 20px;
       }
 
-      .fi-form{
-        grid-template-columns:1fr;
-        gap:0.95rem;
+      .fi-form {
+        grid-template-columns: 1fr;
+        gap: 0.95rem;
       }
 
-      .fi-table{
-        display:block;
-        border-collapse:separate;
-        border-spacing:0;
+      .fi-table {
+        display: block;
+        border-collapse: separate;
+        border-spacing: 0;
       }
 
-      .fi-table thead{
-        display:none;
+      .fi-table thead {
+        display: none;
       }
 
-      .fi-table tbody{
-        display:block;
+      .fi-table tbody {
+        display: block;
       }
 
-      .fi-table tbody tr{
-        display:block;
-        margin:0 0.75rem 0.75rem;
-        border-radius:12px;
-        border:1px solid rgba(229,231,235,0.9);
-        background:#ffffff;
-        overflow:hidden;
+      .fi-table tbody tr {
+        display: block;
+        margin: 0 0.75rem 0.75rem;
+        border-radius: 12px;
+        border: 1px solid rgba(229, 231, 235, 0.9);
+        background: #ffffff;
+        overflow: hidden;
       }
 
-      .fi-table td{
-        display:block;
-        border-bottom:1px solid rgba(243,244,246,0.9);
-        padding:0.55rem 0.85rem;
-        text-align:left;
+      .fi-table td {
+        display: block;
+        border-bottom: 1px solid rgba(243, 244, 246, 0.9);
+        padding: 0.55rem 0.85rem;
+        text-align: left;
       }
 
-      .fi-table td:last-child{
-        border-bottom:none;
+      .fi-table td:last-child {
+        border-bottom: none;
       }
 
-      .fi-table td::before{
-        content:attr(data-label);
-        display:block;
-        font-weight:600;
-        margin-bottom:2px;
-        color:#374151;
+      .fi-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        margin-bottom: 2px;
+        color: #374151;
       }
 
-      .fi-table td.fi-res{
-        text-align:left;
+      .fi-table td.fi-res {
+        text-align: left;
       }
     }
   </style>
 
   <script>
-    function parseInput(id){
+    function parseInput(id) {
       const el = document.getElementById(id);
-      if(!el) return 0;
+      if (!el) return 0;
       const val = String(el.value).replace(',', '.');
       const n = parseFloat(val);
       return isNaN(n) ? 0 : n;
     }
 
-    function calculer(){
+    function calculer() {
       const surface = parseInput("surface");
       const hauteurSoubassement = parseInput("hauteurSoubassement");
       const longueurMur = parseInput("longueurMur");
@@ -233,16 +235,16 @@
       const polystyreneSoubassement = Math.ceil((hauteurSoubassement * longueurMur) / 0.5);
 
       // Formules identiques à ton code d'origine
-      document.getElementById("result-dk").textContent          =
+      document.getElementById("result-dk").textContent =
         Math.ceil(surface * 1.75 / 20) + " sac(s)";
       document.getElementById("result-kam-collage").textContent =
         Math.ceil(surface * 4 / 25) + " sac(s)";
-      document.getElementById("result-kam-enduit").textContent  =
+      document.getElementById("result-kam-enduit").textContent =
         Math.ceil(surface * 7 / 25) + " sac(s)";
-      document.getElementById("result-filet").textContent       =
+      document.getElementById("result-filet").textContent =
         Math.ceil(surface / 50) + " rlx";
 
-      const polystyreneTotal   = Math.ceil(surface / 0.5);
+      const polystyreneTotal = Math.ceil(surface / 0.5);
       const polystyreneRestant = polystyreneTotal - polystyreneSoubassement;
 
       document.getElementById("result-polystyrene").textContent =
@@ -250,45 +252,58 @@
       document.getElementById("result-soubassement").textContent =
         polystyreneSoubassement + " plaque(s)";
 
-      document.getElementById("result-profil").textContent      =
+      document.getElementById("result-profil").textContent =
         Math.ceil(longueurMur / 2) + " pcs";
 
       const primaireTotal = surface * 0.25;
-      document.getElementById("result-primaire").textContent    =
+      document.getElementById("result-primaire").textContent =
         primaireTotal.toFixed(1) + " kg";
 
       const seaux25kg = Math.floor(primaireTotal / 25);
       const restePrimaire = primaireTotal - seaux25kg * 25;
       const seaux7kg = Math.ceil(restePrimaire / 7);
 
-      document.getElementById("result-25kg").textContent        =
+      document.getElementById("result-25kg").textContent =
         seaux25kg + " pot(s)";
-      document.getElementById("result-7kg").textContent         =
+      document.getElementById("result-7kg").textContent =
         seaux7kg + " pot(s)";
 
-      document.getElementById("result-crepi").textContent       =
+      document.getElementById("result-crepi").textContent =
         Math.ceil(surface * 2.8 / 25) + " seau(x)";
-      document.getElementById("result-chevilles").textContent   =
+      document.getElementById("result-chevilles").textContent =
         Math.ceil(surface * 5) + " pcs";
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       calculer();
-      ["surface","hauteurSoubassement","longueurMur"].forEach(id=>{
+      ["surface", "hauteurSoubassement", "longueurMur"].forEach(id => {
         const el = document.getElementById(id);
-        if(el){
+        if (el) {
           el.addEventListener("input", calculer);
         }
       });
     });
   </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
+
 </head>
 
 <body>
   <div class="fi-wrapper">
     <div class="fi-title">FAÇADES ISOLANTES</div>
     <div class="fi-sub">
-      Indiquez la surface, la hauteur de soubassement et la longueur de mur pour estimer les quantités de mortiers, isolants, chevilles et accessoires nécessaires.
+      Indiquez la surface, la hauteur de soubassement et la longueur de mur pour estimer les quantités de mortiers,
+      isolants, chevilles et accessoires nécessaires.
     </div>
 
     <div class="fi-form">
@@ -391,4 +406,5 @@
     </div>
   </div>
 </body>
+
 </html>

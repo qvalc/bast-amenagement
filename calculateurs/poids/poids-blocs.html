@@ -1,113 +1,136 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="icon" type="image/png" href="../favicon.png">
+
   <title>Poids des blocs</title>
   <style>
-    :root{
-      --anth:#2b2f33;     /* gris anthracite pour les titres */
-      --muted:#6b7280;    /* gris secondaire */
-      --line:#e5e7eb;     /* bordures légères */
+    :root {
+      --anth: #2b2f33;
+      /* gris anthracite pour les titres */
+      --muted: #6b7280;
+      /* gris secondaire */
+      --line: #e5e7eb;
+      /* bordures légères */
     }
 
     /* Fond 100% transparent + typographie sobre */
-    body{
+    body {
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: transparent;
-      color:#333;
-      margin:0;
-      padding:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      min-height:100vh;
-      text-align:center;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
     }
 
     /* Titres anthracite, sans fond */
-    header{
-      width:100%;
+    header {
+      width: 100%;
       background: transparent;
-      padding:10px 0;
+      padding: 10px 0;
     }
+
     header h1,
-    .container h1{
-      margin:0 0 14px;
-      font-size:18px;
-      color:var(--anth);
-      font-weight:600;
+    .container h1 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      color: var(--anth);
+      font-weight: 600;
     }
 
     /* Cartes transparentes, sans ombre */
-    .container{
+    .container {
       background: transparent;
-      border:1px solid var(--line);
-      border-radius:10px;
-      padding:18px;
-      max-width:420px;
-      width:92%;
-      margin:14px auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px;
+      max-width: 420px;
+      width: 92%;
+      margin: 14px auto;
     }
 
-    label{
-      font-weight:600;
-      color:var(--muted);
-      margin-top:8px;
-      display:block;
-      font-size:13px;
+    label {
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 8px;
+      display: block;
+      font-size: 13px;
     }
 
     select,
     input[type="number"],
-    input[type="text"]{
-      width:100%;
-      padding:10px;
-      margin:10px 0;
-      border:1px solid var(--line);
-      border-radius:6px;
-      box-sizing:border-box;
-      font-size:14px;
-      background:#fff;         /* champs non transparents pour la lisibilité */
-      color:#333;
-      text-align:center;
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+      background: #fff;
+      /* champs non transparents pour la lisibilité */
+      color: #333;
+      text-align: center;
     }
 
-    input[type="text"]{
-      cursor:not-allowed;
+    input[type="text"] {
+      cursor: not-allowed;
     }
 
-    button{
+    button {
       background: var(--anth);
-      color:#fff;
-      padding:10px;
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
-      width:100%;
-      font-size:14px;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
     }
-    button:hover{ opacity:.92; }
 
-    @media (max-width:768px){
-      .container{ padding:14px; }
-      label{ font-size:12px; }
-      select, input, button{ font-size:13px; padding:8px; }
+    button:hover {
+      opacity: .92;
+    }
+
+    @media (max-width:768px) {
+      .container {
+        padding: 14px;
+      }
+
+      label {
+        font-size: 12px;
+      }
+
+      select,
+      input,
+      button {
+        font-size: 13px;
+        padding: 8px;
+      }
     }
   </style>
 
   <script>
     const poidsBlocs = {
-      "Argex": {9: 6.20, 14: 8.60, 19: 10.30, 29: 17.00},
-      "Beton creux": {9: 11.30, 14: 14.64, 19: 18.34, 29: 26.93},
-      "Beton plein": {9: 13.50, 14: 22.00, 19: 29.80, 29: null}
+      "Argex": { 9: 6.20, 14: 8.60, 19: 10.30, 29: 17.00 },
+      "Beton creux": { 9: 11.30, 14: 14.64, 19: 18.34, 29: 26.93 },
+      "Beton plein": { 9: 13.50, 14: 22.00, 19: 29.80, 29: null }
     };
 
     const poidsStepoc = {
-      "Stepoc droit A": {"60/20/15": 21.00, "60/20/40": 35.00},
-      "Stepoc droit N/A": {"60/20/19": 23.00, "60/20/30": 26.50},
-      "Stepoc droit N": {"60/20/24": 24.00, "60/20/40": 37.50, "60/20/55": 31.50},
-      "Stépoc Rond N": {"60/20/28": 28.00}
+      "Stepoc droit A": { "60/20/15": 21.00, "60/20/40": 35.00 },
+      "Stepoc droit N/A": { "60/20/19": 23.00, "60/20/30": 26.50 },
+      "Stepoc droit N": { "60/20/24": 24.00, "60/20/40": 37.50, "60/20/55": 31.50 },
+      "Stépoc Rond N": { "60/20/28": 28.00 }
     };
 
     const poidsCellulaire = {
@@ -178,7 +201,19 @@
       calculerPoids(typeBloc, taille, quantite, "resultat-cellulaire", poidsCellulaire);
     }
   </script>
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-9GX0ZY7J95"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-9GX0ZY7J95');
+  </script>
+
 </head>
+
 <body>
   <header>
     <h1>Calculateur Poids des blocs</h1>
@@ -260,4 +295,5 @@
     <button onclick="calculerPoidsCellulaire()">Calculer</button>
   </div>
 </body>
+
 </html>
